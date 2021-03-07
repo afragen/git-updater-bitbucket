@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2021-03-07T06:13:45+00:00\n"
+"POT-Creation-Date: 2021-03-07T19:14:06+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.4.0\n"
 "X-Domain: git-updater-bitbucket\n"
@@ -28,4 +28,67 @@ msgstr ""
 
 #. Author of the plugin
 msgid "Andy Fragen"
+msgstr ""
+
+#: src/Bitbucket/Bitbucket_API.php:368
+#: src/Bitbucket/Bitbucket_API.php:400
+msgid "Bitbucket Pseudo-Token"
+msgstr ""
+
+#: src/Bitbucket/Bitbucket_API.php:375
+#: src/Bitbucket/Bitbucket_API.php:476
+msgid "Bitbucket Username"
+msgstr ""
+
+#: src/Bitbucket/Bitbucket_API.php:387
+#: src/Bitbucket/Bitbucket_API.php:483
+msgid "Bitbucket Password"
+msgstr ""
+
+#: src/Bitbucket/Bitbucket_API.php:418
+msgid "Bitbucket Private Repositories"
+msgstr ""
+
+#: src/Bitbucket/Bitbucket_API.php:449
+msgid "Bitbucket"
+msgstr ""
+
+#: src/Bitbucket/Bitbucket_API.php:458
+msgid "Enter `username:password` if private repository. Don't forget the colon `:`."
+msgstr ""
+
+#: src/Bitbucket/Bitbucket_API.php:465
+msgid "Enter your personal Bitbucket username and password. It will automatically be converted to a pseudo-token."
+msgstr ""
+
+#: src/Bitbucket/Bitbucket_API.php:499
+msgid "Enter Bitbucket username."
+msgstr ""
+
+#: src/Bitbucket/Bitbucket_API.php:514
+msgid "Enter Bitbucket password."
+msgstr ""
+
+#: src/Bitbucket/Bitbucket_Server_API.php:367
+msgid "Bitbucket Server Private Settings"
+msgstr ""
+
+#: src/Bitbucket/Bitbucket_Server_API.php:374
+msgid "Bitbucket Server Username"
+msgstr ""
+
+#: src/Bitbucket/Bitbucket_Server_API.php:386
+msgid "Bitbucket Server Password"
+msgstr ""
+
+#: src/Bitbucket/Bitbucket_Server_API.php:399
+msgid "Bitbucket Server Pseudo-Token"
+msgstr ""
+
+#: src/Bitbucket/Bitbucket_Server_API.php:417
+msgid "Bitbucket Server Private Repositories"
+msgstr ""
+
+#: src/Bitbucket/Bitbucket_Server_API.php:448
+msgid "Bitbucket Server"
 msgstr ""

@@ -364,14 +364,14 @@ class Bitbucket_Server_API extends Bitbucket_API {
 	public function add_settings( $auth_required ) {
 		add_settings_section(
 			'bitbucket_server_token',
-			esc_html__( 'Bitbucket Server Private Settings', 'github-updater' ),
+			esc_html__( 'Bitbucket Server Private Settings', 'git-updater-bitbucket' ),
 			[ $this, 'print_section_bitbucket_token' ],
 			'github_updater_bbserver_install_settings'
 		);
 
 		add_settings_field(
 			'bitbucket_server_username',
-			esc_html__( 'Bitbucket Server Username', 'github-updater' ),
+			esc_html__( 'Bitbucket Server Username', 'git-updater-bitbucket' ),
 			[ Singleton::get_instance( 'Settings', $this ), 'token_callback_text' ],
 			'github_updater_bbserver_install_settings',
 			'bitbucket_server_token',
@@ -383,7 +383,7 @@ class Bitbucket_Server_API extends Bitbucket_API {
 
 		add_settings_field(
 			'bitbucket_server_password',
-			esc_html__( 'Bitbucket Server Password', 'github-updater' ),
+			esc_html__( 'Bitbucket Server Password', 'git-updater-bitbucket' ),
 			[ Singleton::get_instance( 'Settings', $this ), 'token_callback_text' ],
 			'github_updater_bbserver_install_settings',
 			'bitbucket_server_token',
@@ -396,7 +396,7 @@ class Bitbucket_Server_API extends Bitbucket_API {
 
 		add_settings_field(
 			'bbserver_token',
-			esc_html__( 'Bitbucket Server Pseudo-Token', 'github-updater' ),
+			esc_html__( 'Bitbucket Server Pseudo-Token', 'git-updater-bitbucket' ),
 			[ Singleton::get_instance( 'Settings', $this ), 'token_callback_text' ],
 			'github_updater_bbserver_install_settings',
 			'bitbucket_server_token',
@@ -414,7 +414,7 @@ class Bitbucket_Server_API extends Bitbucket_API {
 		if ( $auth_required['bitbucket_server'] ) {
 			add_settings_section(
 				'bitbucket_server_id',
-				esc_html__( 'Bitbucket Server Private Repositories', 'github-updater' ),
+				esc_html__( 'Bitbucket Server Private Repositories', 'git-updater-bitbucket' ),
 				[ $this, 'print_section_bitbucket_info' ],
 				'github_updater_bbserver_install_settings'
 			);
@@ -445,7 +445,7 @@ class Bitbucket_Server_API extends Bitbucket_API {
 		add_filter(
 			'github_updater_add_settings_subtabs',
 			function ( $subtabs ) {
-				return array_merge( $subtabs, [ 'bbserver' => esc_html__( 'Bitbucket Server', 'github-updater' ) ] );
+				return array_merge( $subtabs, [ 'bbserver' => esc_html__( 'Bitbucket Server', 'git-updater-bitbucket' ) ] );
 			}
 		);
 	}

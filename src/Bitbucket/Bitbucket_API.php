@@ -365,14 +365,14 @@ class Bitbucket_API extends API implements API_Interface {
 	public function add_settings( $auth_required ) {
 		add_settings_section(
 			'bitbucket_token',
-			esc_html__( 'Bitbucket Pseudo-Token', 'github-updater' ),
+			esc_html__( 'Bitbucket Pseudo-Token', 'git-updater-bitbucket' ),
 			[ $this, 'print_section_bitbucket_token' ],
 			'github_updater_bitbucket_install_settings'
 		);
 
 		add_settings_field(
 			'bitbucket_username',
-			esc_html__( 'Bitbucket Username', 'github-updater' ),
+			esc_html__( 'Bitbucket Username', 'git-updater-bitbucket' ),
 			[ Singleton::get_instance( 'Settings', $this ), 'token_callback_text' ],
 			'github_updater_bitbucket_install_settings',
 			'bitbucket_token',
@@ -384,7 +384,7 @@ class Bitbucket_API extends API implements API_Interface {
 
 		add_settings_field(
 			'bitbucket_password',
-			esc_html__( 'Bitbucket Password', 'github-updater' ),
+			esc_html__( 'Bitbucket Password', 'git-updater-bitbucket' ),
 			[ Singleton::get_instance( 'Settings', $this ), 'token_callback_text' ],
 			'github_updater_bitbucket_install_settings',
 			'bitbucket_token',
@@ -397,7 +397,7 @@ class Bitbucket_API extends API implements API_Interface {
 
 		add_settings_field(
 			'bitbucket_token',
-			esc_html__( 'Bitbucket Pseudo-Token', 'github-updater' ),
+			esc_html__( 'Bitbucket Pseudo-Token', 'git-updater-bitbucket' ),
 			[ Singleton::get_instance( 'Settings', $this ), 'token_callback_text' ],
 			'github_updater_bitbucket_install_settings',
 			'bitbucket_token',
@@ -415,7 +415,7 @@ class Bitbucket_API extends API implements API_Interface {
 		if ( $auth_required['bitbucket_private'] ) {
 			add_settings_section(
 				'bitbucket_id',
-				esc_html__( 'Bitbucket Private Repositories', 'github-updater' ),
+				esc_html__( 'Bitbucket Private Repositories', 'git-updater-bitbucket' ),
 				[ $this, 'print_section_bitbucket_info' ],
 				'github_updater_bitbucket_install_settings'
 			);
@@ -446,7 +446,7 @@ class Bitbucket_API extends API implements API_Interface {
 		add_filter(
 			'github_updater_add_settings_subtabs',
 			function ( $subtabs ) {
-				return array_merge( $subtabs, [ 'bitbucket' => esc_html__( 'Bitbucket', 'github-updater' ) ] );
+				return array_merge( $subtabs, [ 'bitbucket' => esc_html__( 'Bitbucket', 'git-updater-bitbucket' ) ] );
 			}
 		);
 	}
@@ -455,14 +455,14 @@ class Bitbucket_API extends API implements API_Interface {
 	 * Print the Bitbucket repo Settings text.
 	 */
 	public function print_section_bitbucket_info() {
-		esc_html_e( 'Enter `username:password` if private repository. Don\'t forget the colon `:`.', 'github-updater' );
+		esc_html_e( 'Enter `username:password` if private repository. Don\'t forget the colon `:`.', 'git-updater-bitbucket' );
 	}
 
 	/**
 	 * Print the Bitbucket user/pass Settings text.
 	 */
 	public function print_section_bitbucket_token() {
-		esc_html_e( 'Enter your personal Bitbucket username and password. It will automatically be converted to a pseudo-token.', 'github-updater' );
+		esc_html_e( 'Enter your personal Bitbucket username and password. It will automatically be converted to a pseudo-token.', 'git-updater-bitbucket' );
 	}
 
 	/**
@@ -473,14 +473,14 @@ class Bitbucket_API extends API implements API_Interface {
 	public function add_install_settings_fields( $type ) {
 		add_settings_field(
 			'bitbucket_username',
-			esc_html__( 'Bitbucket Username', 'github-updater' ),
+			esc_html__( 'Bitbucket Username', 'git-updater-bitbucket' ),
 			[ $this, 'bitbucket_username' ],
 			'github_updater_install_' . $type,
 			$type
 		);
 		add_settings_field(
 			'bitbucket_password',
-			esc_html__( 'Bitbucket Password', 'github-updater' ),
+			esc_html__( 'Bitbucket Password', 'git-updater-bitbucket' ),
 			[ $this, 'bitbucket_password' ],
 			'github_updater_install_' . $type,
 			$type
@@ -496,7 +496,7 @@ class Bitbucket_API extends API implements API_Interface {
 			<input class="bitbucket_setting" type="text" style="width:50%;" id="bitbucket_username" name="bitbucket_username" value="">
 			<br>
 			<span class="description">
-				<?php esc_html_e( 'Enter Bitbucket username.', 'github-updater' ); ?>
+				<?php esc_html_e( 'Enter Bitbucket username.', 'git-updater-bitbucket' ); ?>
 			</span>
 		</label>
 		<?php
@@ -511,7 +511,7 @@ class Bitbucket_API extends API implements API_Interface {
 			<input class="bitbucket_setting" type="password" style="width:50%;" id="bitbucket_password" name="bitbucket_password" value="" autocomplete="new-password">
 			<br>
 			<span class="description">
-				<?php esc_html_e( 'Enter Bitbucket password.', 'github-updater' ); ?>
+				<?php esc_html_e( 'Enter Bitbucket password.', 'git-updater-bitbucket' ); ?>
 			</span>
 		</label>
 		<?php
