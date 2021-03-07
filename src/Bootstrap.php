@@ -68,7 +68,6 @@ class Bootstrap {
 			return false;
 		}
 
-		$this->load_hooks();
 		new Bitbucket_API();
 	}
 
