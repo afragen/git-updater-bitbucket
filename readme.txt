@@ -1,17 +1,11 @@
 # Git Updater - Bitbucket/Bitbucket Server
 
-![downloads](https://img.shields.io/github/downloads/afragen/git-updater-bitbucket/total) ![downloads@latest](https://img.shields.io/github/downloads/afragen/git-updater-bitbucket/latest/total)
-
-![WordPress Tests](https://github.com/afragen/git-updater-bitbucket/workflows/WordPress%20Tests/badge.svg)
-
-### Bitbucket and Bitbucket Server API for Git Updater plugin
-
-* Contributors: [Andy Fragen](https://github.com/afragen), [contributors](https://github.com/afragen/git-updater-bitbucket/graphs/contributors)
+* Contributors: afragen
 * Tags: gitlab, api, git updater, github updater
 * Requires at least: 5.2
 * Requires PHP: 5.6
-* Tested up to: trunk
-* Stable tag: [main](https://github.com/afragen/git-updater-bitbucket/releases/latest)
+* Tested up to: 5.7
+* Stable tag: main
 * Donate link: <https://thefragens.com/github-updater-donate>
 * License: MIT
 
