@@ -1,0 +1,33 @@
+{
+  "name": "afragen/git-updater-bitbucket",
+  "description": "Add Bitbucket repositories to GitHub Updater that lack actual GitHub Updater headers.",
+  "type": "wordpress-plugin",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Andy Fragen",
+      "email": "andy@thefragens.com",
+      "homepage": "https://thefragens.com",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/afragen/git-updater-bitbucket/issues",
+    "source": "https://github.com/afragen/git-updater-bitbucket"
+  },
+  "prefer-stable": true,
+  "require": {
+    "php": ">=5.6"
+  },
+  "autoload": {
+    "psr-4": {
+      "Fragen\\GitHub_Updater\\Bitbucket\\": "src/",
+      "Fragen\\GitHub_Updater\\API\\": "src/Bitbucket/"
+    }
+  },
+  "scripts": {
+    "post-update-cmd": [
+      "wp i18n make-pot . languages/git-updater-bitbucket.pot"
+    ]
+  }
+}
