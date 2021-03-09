@@ -10,6 +10,8 @@
 
 namespace Fragen\GitHub_Updater\API;
 
+use Fragen\Singleton;
+
 /*
  * Exit if called directly.
  */

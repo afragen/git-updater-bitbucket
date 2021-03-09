@@ -8,7 +8,7 @@
  * @package   git-updater-bitbucket
  */
 
-namespace Fragen\GitHub_Updater\Bitbucket;
+namespace Fragen\Git_Updater\Bitbucket;
 
 use Fragen\GitHub_Updater\API\Bitbucket_API;
 
