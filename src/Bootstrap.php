@@ -106,15 +106,19 @@ class Bootstrap {
 
 		add_filter(
 			'gu_api_repo_type_data',
-			function ( $false, $git ) {
-				if ( 'bitbucket' === $git ) {
-					return [
-						'api'      => 'https://api.bitbucket.org',
-						'download' => 'https://bitbucket.org',
-					];
+			function ( $arr, $repo ) {
+				if ( 'bitbucket' === $repo->git ) {
+					$arr['git'] = 'bitbucket';
+					if ( empty( $repo->enterprise ) ) {
+						$arr['base_uri']      = 'https://api.bitbucket.org';
+						$arr['base_download'] = 'https://bitbucket.org';
+					} else {
+						$arr['base_uri']      = $repo->enterprise_api;
+						$arr['base_download'] = $repo->enterprise;
+					}
 				}
 
-				return $false;
+				return $arr;
 			},
 			10,
 			2
