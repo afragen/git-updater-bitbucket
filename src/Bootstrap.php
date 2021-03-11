@@ -11,6 +11,7 @@
 namespace Fragen\Git_Updater\Bitbucket;
 
 use Fragen\GitHub_Updater\API\Bitbucket_API;
+use Fragen\GitHub_Updater\API\Bitbucket_Server_API;
 
 /*
  * Exit if called directly.
@@ -77,7 +78,7 @@ class Bootstrap {
 	 * @return void
 	 */
 	public function load_hooks() {
-		add_filter(
+		\add_filter(
 			'gu_get_repo_parts',
 			function ( $repos, $type ) {
 				$repos['types'] = array_merge( $repos['types'], [ 'Bitbucket' => 'bitbucket_' . $type ] );
@@ -89,7 +90,7 @@ class Bootstrap {
 			2
 		);
 
-		add_filter(
+		\add_filter(
 			'gu_settings_auth_required',
 			function ( $auth_required ) {
 				return \array_merge(
@@ -104,7 +105,7 @@ class Bootstrap {
 			1
 		);
 
-		add_filter(
+		\add_filter(
 			'gu_api_repo_type_data',
 			function ( $arr, $repo ) {
 				if ( 'bitbucket' === $repo->git ) {
@@ -124,7 +125,35 @@ class Bootstrap {
 			2
 		);
 
-		add_filter(
+		\add_filter(
+			'gu_api_url_type',
+			function ( $type, $repo, $download_link, $endpoint ) {
+				if ( 'bitbucket' === $type['git'] ) {
+					$type['endpoint'] = true;
+					$bitbucket        = new Bitbucket_API();
+					$method           = $bitbucket->get_class_vars( 'API\Bitbucket_API', 'method' );
+					do {
+						if ( $repo->enterprise_api ) {
+							$type['endpoint'] = false;
+							if ( $download_link ) {
+								$type['base_download'] = $type['base_uri'];
+								break;
+							}
+							$type['base_uri'] = $repo->enterprise_api . $bitbucket->add_endpoints( $bitbucket, $endpoint );
+						}
+					} while ( false );
+					if ( $download_link && 'release_asset' === $method ) {
+						$type['base_download'] = $type['base_uri'];
+					}
+				}
+
+				return $type;
+			},
+			10,
+			4
+		);
+
+		\add_filter(
 			'gu_git_servers',
 			function ( $git_servers ) {
 				return array_merge( $git_servers, [ 'bitbucket' => 'Bitbucket' ] );
@@ -133,7 +162,7 @@ class Bootstrap {
 			1
 		);
 
-		add_filter(
+		\add_filter(
 			'gu_installed_apis',
 			function ( $installed_apis ) {
 				return array_merge(
@@ -146,6 +175,20 @@ class Bootstrap {
 			},
 			10,
 			1
+		);
+
+		\add_filter(
+			'gu_install_remote_install',
+			function ( $install, $headers ) {
+				if ( 'bitbucket' === $install['github_updater_api'] ) {
+					$install = ( new Bitbucket_API() )->remote_install( $headers, $install );
+					$install = ( new Bitbucket_Server_API() )->remote_install( $headers, $install );
+				}
+
+				return $install;
+			},
+			10,
+			2
 		);
 	}
 }

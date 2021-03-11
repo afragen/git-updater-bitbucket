@@ -40,7 +40,7 @@ class Bitbucket_Server_API extends Bitbucket_API {
 	 *
 	 * @param \stdClass $type plugin|theme.
 	 */
-	public function __construct( $type ) {
+	public function __construct( $type = null ) {
 		parent::__construct( $type );
 		$this->add_settings_subtab();
 	}
