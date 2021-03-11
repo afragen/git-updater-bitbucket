@@ -129,17 +129,16 @@ class Bootstrap {
 			'gu_api_url_type',
 			function ( $type, $repo, $download_link, $endpoint ) {
 				if ( 'bitbucket' === $type['git'] ) {
-					$type['endpoint'] = true;
-					$bitbucket        = new Bitbucket_API();
-					$method           = $bitbucket->get_class_vars( 'API\Bitbucket_API', 'method' );
+					$method = ( new Bitbucket_API() )->get_class_vars( 'API\Bitbucket_API', 'method' );
 					do {
 						if ( $repo->enterprise_api ) {
-							$type['endpoint'] = false;
+							// $type['endpoint'] = false;
 							if ( $download_link ) {
 								$type['base_download'] = $type['base_uri'];
 								break;
 							}
-							$type['base_uri'] = $repo->enterprise_api . $bitbucket->add_endpoints( $bitbucket, $endpoint );
+							// $type['base_uri'] = $repo->enterprise_api . (new Bitbucket_Server_API())->add_endpoints( new Bitbucket_Server_API(), $endpoint );
+							$type['base_uri'] = $repo->enterprise_api;
 						}
 					} while ( false );
 					if ( $download_link && 'release_asset' === $method ) {
