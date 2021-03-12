@@ -1,5 +1,6 @@
 [unreleased]
 * de-anonymize hooks
+* add filters for language pack processing
 
 #### 0.4.1 / 2021-03-10
 * update for filter `gu_api_url_type`
