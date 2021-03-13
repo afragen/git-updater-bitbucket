@@ -80,7 +80,7 @@ class Bitbucket_API extends API implements API_Interface {
 	 * @return bool
 	 */
 	public function get_remote_info( $file ) {
-		return $this->get_remote_api_info( 'bitbucket', $file, "/2.0/repositories/:owner/:repo/src/:branch/{$file}" );
+		return $this->get_remote_api_info( 'bitbucket', "/2.0/repositories/:owner/:repo/src/:branch/{$file}" );
 	}
 
 	/**
@@ -91,7 +91,7 @@ class Bitbucket_API extends API implements API_Interface {
 	 * @return bool
 	 */
 	public function get_remote_tag() {
-		return $this->get_remote_api_tag( 'bitbucket', '/2.0/repositories/:owner/:repo/refs/tags' );
+		return $this->get_remote_api_tag( '/2.0/repositories/:owner/:repo/refs/tags' );
 	}
 
 	/**
@@ -122,7 +122,7 @@ class Bitbucket_API extends API implements API_Interface {
 	 * @return bool
 	 */
 	public function get_repo_meta() {
-		return $this->get_remote_api_repo_meta( 'bitbucket', '/2.0/repositories/:owner/:repo' );
+		return $this->get_remote_api_repo_meta( '/2.0/repositories/:owner/:repo' );
 	}
 
 	/**

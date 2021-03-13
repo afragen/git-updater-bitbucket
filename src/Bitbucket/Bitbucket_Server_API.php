@@ -53,7 +53,7 @@ class Bitbucket_Server_API extends Bitbucket_API {
 	 * @return bool
 	 */
 	public function get_remote_info( $file ) {
-		return $this->get_remote_api_info( 'bbserver', $file, "/1.0/projects/:owner/repos/:repo/browse/{$file}" );
+		return $this->get_remote_api_info( 'bbserver', "/1.0/projects/:owner/repos/:repo/browse/{$file}" );
 	}
 
 	/**
@@ -62,7 +62,7 @@ class Bitbucket_Server_API extends Bitbucket_API {
 	 * @return bool
 	 */
 	public function get_repo_meta() {
-		return $this->get_remote_api_repo_meta( 'bbserver', '/1.0/projects/:owner/repos/:repo' );
+		return $this->get_remote_api_repo_meta( '/1.0/projects/:owner/repos/:repo' );
 	}
 
 	/**
@@ -73,7 +73,7 @@ class Bitbucket_Server_API extends Bitbucket_API {
 	 * @return bool
 	 */
 	public function get_remote_tag() {
-		return $this->get_remote_api_tag( 'bbserver', '/1.0/projects/:owner/repos/:repo/tags' );
+		return $this->get_remote_api_tag( '/1.0/projects/:owner/repos/:repo/tags' );
 	}
 
 	/**
