@@ -21,7 +21,7 @@ class BootstrapTest extends WP_UnitTestCase {
 	}
 
 	public function test_add_repo_parts() {
-		$empty     = ['types' => '', 'uris' => ''];
+		$empty     = ['types' => [], 'uris' => []];
 		$expected  = [
 			'types' => ['Bitbucket' => 'bitbucket_plugin'],
 			'uris'  => ['Bitbucket' => 'https://bitbucket.org/'],
