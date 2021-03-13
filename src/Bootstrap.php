@@ -90,7 +90,7 @@ class Bootstrap {
 		return array_merge(
 			$auth_required,
 			[
-				'bitbucket'         => false,
+				'bitbucket'         => true,
 				'bitbucket_private' => true,
 				'bitbucket_server'  => true,
 			]

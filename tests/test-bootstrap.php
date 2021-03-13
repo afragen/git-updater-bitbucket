@@ -33,7 +33,7 @@ class BootstrapTest extends WP_UnitTestCase {
 
 	public function test_set_auth_required() {
 		$expected = [
-			'bitbucket'         => false,
+			'bitbucket'         => true,
 			'bitbucket_private' => true,
 			'bitbucket_server'  => true,
 		];
