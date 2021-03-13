@@ -67,4 +67,14 @@ class BootstrapTest extends WP_UnitTestCase {
 		$actual_enterprise   = (new Bootstrap())->set_repo_type_data([], $enterprise);
 		$this->assertEqualSetsWithIndex($expected_enterprise, $actual_enterprise);
 	}
+
+	public function test_parse_headers() {
+		$git = 'Bitbucket';
+		$api = 'https://api.example.com';
+
+		$expected = 'https://api.example.com/rest/api';
+		$actual   = (new Bootstrap())->parse_headers('https://api.example.com', 'Bitbucket');
+
+		$this->assertSame($expected, $actual);
+	}
 }
