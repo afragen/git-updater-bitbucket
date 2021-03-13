@@ -34,31 +34,6 @@ add_action(
  */
 class Bootstrap {
 	/**
-	 * Holds main plugin file.
-	 *
-	 * @var $file
-	 */
-	protected $file;
-
-	/**
-	 * Holds main plugin directory.
-	 *
-	 * @var $dir
-	 */
-	protected $dir;
-
-	/**
-	 * Constructor.
-	 *
-	 * @param  string $file Main plugin file.
-	 * @return void
-	 */
-	public function __construct( $file ) {
-		$this->file = $file;
-		$this->dir  = dirname( $file );
-	}
-
-	/**
 	 * Run the bootstrap.
 	 *
 	 * @return bool|void
@@ -79,11 +54,16 @@ class Bootstrap {
 	 */
 	public function load_hooks() {
 		add_filter( 'gu_get_repo_parts', [ $this, 'add_repo_parts' ], 10, 2 );
+		add_filter( 'gu_parse_headers_enterprise_api', [ $this, 'parse_headers' ], 10, 2 );
 		add_filter( 'gu_settings_auth_required', [ $this, 'set_auth_required' ], 10, 1 );
+		add_filter( 'gu_get_repo_api', [ $this, 'set_repo_api' ], 10, 3 );
 		add_filter( 'gu_api_repo_type_data', [ $this, 'set_repo_type_data' ], 10, 2 );
 		add_filter( 'gu_api_url_type', [ $this, 'set_api_url_data' ], 10, 4 );
+		add_filter( 'gu_post_get_credentials', [ $this, 'set_credentials' ], 10, 2 );
+		add_filter( 'gu_get_auth_header', [ $this, 'set_auth_header' ], 10, 2 );
 		add_filter( 'gu_git_servers', [ $this, 'set_git_servers' ], 10, 1 );
 		add_filter( 'gu_installed_apis', [ $this, 'set_installed_apis' ], 10, 1 );
+		add_filter( 'gu_parse_release_asset', [ $this, 'parse_release_asset' ], 10, 4 );
 		add_filter( 'gu_install_remote_install', [ $this, 'set_remote_install_data' ], 10, 2 );
 		add_filter( 'gu_get_language_pack_json', [ $this, 'set_language_pack_json' ], 10, 4 );
 		add_filter( 'gu_post_process_language_pack_package', [ $this, 'process_language_pack_data' ], 10, 4 );
@@ -105,6 +85,22 @@ class Bootstrap {
 	}
 
 	/**
+	 * Modify enterprise API data.
+	 *
+	 * @param string $enterprise_api URL for API REST endpoint.
+	 * @param string $git            Name of git host.
+	 *
+	 * @return string
+	 */
+	public function parse_headers( $enterprise_api, $git ) {
+		if ( 'Bitbucket' === $git ) {
+			$enterprise_api .= '/rest/api';
+		}
+
+		return $enterprise_api;
+	}
+
+	/**
 	 * Add API specific auth required data.
 	 *
 	 * @param array $auth_required Array of authentication required data.
@@ -115,8 +111,9 @@ class Bootstrap {
 		return array_merge(
 			$auth_required,
 			[
-				'bitbucket_private' => false,
-				'bitbucket_server'  => false,
+				'bitbucket'         => true,
+				'bitbucket_private' => true,
+				'bitbucket_server'  => true,
 			]
 		);
 	}
@@ -142,6 +139,27 @@ class Bootstrap {
 		}
 
 		return $arr;
+	}
+
+	/**
+	 * Return git host API object.
+	 *
+	 * @param \stdClass $repo_api Git API object.
+	 * @param string    $git      Name of git host.
+	 * @param \stdClass $repo     Repository object.
+	 *
+	 * @return \stdClass
+	 */
+	public function set_repo_api( $repo_api, $git, $repo ) {
+		if ( 'bitbucket' === $git ) {
+			if ( ! empty( $repo->enterprise ) ) {
+				$repo_api = new Bitbucket_Server_API( $repo );
+			} else {
+				$repo_api = new Bitbucket_API( $repo );
+			}
+		}
+
+		return $repo_api;
 	}
 
 	/**
@@ -175,6 +193,56 @@ class Bootstrap {
 	}
 
 	/**
+	 * Add credentials data for API.
+	 *
+	 * @param array $credentials Array of repository credentials data.
+	 * @param array $args        Hook args.
+	 *
+	 * @return array
+	 */
+	public function set_credentials( $credentials, $args ) {
+		if ( isset( $args['type'], $args['headers'], $args['options'], $args['slug'], $args['object'] ) ) {
+			$type    = $args['type'];
+			$headers = $args['headers'];
+			$options = $args['options'];
+			$slug    = $args['slug'];
+			$object  = $args['object'];
+		}
+		if ( 'bitbucket' === $type || $object instanceof Bitbucket_API || $object instanceof Bitbucket_Server_API ) {
+			$bitbucket_org   = in_array( $headers['host'], [ 'bitbucket.org', 'api.bitbucket.org' ], true );
+			$bitbucket_token = ! empty( $options['bitbucket_access_token'] ) ? $options['bitbucket_access_token'] : null;
+			$bbserver_token  = ! empty( $options['bbserver_access_token'] ) ? $options['bbserver_access_token'] : null;
+			$token           = ! empty( $options[ $slug ] ) ? $options[ $slug ] : null;
+			$token           = null === $token && $bitbucket_org ? $bitbucket_token : $token;
+			$token           = null === $token && ! $bitbucket_org ? $bbserver_token : $token;
+
+			$credentials['type']       = 'bitbucket';
+			$credentials['isset']      = true;
+			$credentials['token']      = isset( $token ) ? $token : null;
+			$credentials['enterprise'] = ! $bitbucket_org;
+		}
+
+		return $credentials;
+	}
+
+	/**
+	 * Add Basic Authentication header.
+	 *
+	 * @param array $headers     HTTP GET headers.
+	 * @param array $credentials Repository credentials.
+	 *
+	 * @return array
+	 */
+	public function set_auth_header( $headers, $credentials ) {
+		if ( 'bitbucket' === $credentials['type'] ) {
+			// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
+			$headers['headers']['Authorization'] = 'Basic ' . base64_encode( $credentials['token'] );
+		}
+
+		return $headers;
+	}
+
+	/**
 	 * Add API as git server.
 	 *
 	 * @param array $git_servers Array of git servers.
@@ -182,7 +250,13 @@ class Bootstrap {
 	 * @return array
 	 */
 	public function set_git_servers( $git_servers ) {
-		return array_merge( $git_servers, [ 'bitbucket' => 'Bitbucket' ] );
+		return array_merge(
+			$git_servers,
+			[
+				'bitbucket' => 'Bitbucket',
+				'bbserver'  => 'Bitbucket Server',
+			]
+		);
 	}
 
 	/**
@@ -200,6 +274,37 @@ class Bootstrap {
 				'bitbucket_server_api' => true,
 			]
 		);
+	}
+
+	/**
+	 * Parse API release asset.
+	 *
+	 * @param \stdClass $response API response object.
+	 * @param string    $git      Name of git host.
+	 * @param string    $request  Schema of API request.
+	 * @param \stdClass $obj      Current class object.
+	 *
+	 * @return string|null
+	 */
+	public function parse_release_asset( $response, $git, $request, $obj ) {
+		if ( 'bitbucket' === $git ) {
+			do {
+				$download_base = trailingslashit( $obj->get_api_url( $request, true ) );
+				$assets        = isset( $response->values ) ? $response->values : [];
+				foreach ( $assets as $asset ) {
+					if ( 1 === count( $assets ) || 0 === strpos( $asset->name, $obj->type->slug ) ) {
+						$response = $download_base . $asset->name;
+						break;
+					}
+				}
+			} while ( false );
+			$response = is_string( $response ) ? $response : null;
+		}
+		if ( 'bbserver' === $git ) {
+			// TODO: make work.
+		}
+
+		return $response;
 	}
 
 	/**
