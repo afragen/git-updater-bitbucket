@@ -250,7 +250,13 @@ class Bootstrap {
 	 * @return array
 	 */
 	public function set_git_servers( $git_servers ) {
-		return array_merge( $git_servers, [ 'bitbucket' => 'Bitbucket' ] );
+		return array_merge(
+			$git_servers,
+			[
+				'bitbucket' => 'Bitbucket',
+				'bbserver'  => 'Bitbucket Server',
+			]
+		);
 	}
 
 	/**
