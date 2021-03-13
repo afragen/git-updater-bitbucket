@@ -201,23 +201,25 @@ class Bootstrap {
 	 * @return array
 	 */
 	public function set_credentials( $credentials, $args ) {
-		if ( isset( $args['type'], $args['headers'], $args['hosts'], $args['options'], $args['slug'] ) ) {
+		if ( isset( $args['type'], $args['headers'], $args['options'], $args['slug'], $args['object'] ) ) {
 			$type    = $args['type'];
 			$headers = $args['headers'];
-			$hosts   = $args['hosts'];
 			$options = $args['options'];
 			$slug    = $args['slug'];
+			$object  = $args['object'];
 		}
-		if ( 'bitbucket' === $type || $type instanceof Bitbucket_API || $type instanceof Bitbucket_Server_API ) {
-			$bitbucket_org   = in_array( $headers['host'], $hosts, true );
+		if ( 'bitbucket' === $type || $object instanceof Bitbucket_API || $object instanceof Bitbucket_Server_API ) {
+			$bitbucket_org   = in_array( $headers['host'], [ 'bitbucket.org', 'api.bitbucket.org' ], true );
 			$bitbucket_token = ! empty( $options['bitbucket_access_token'] ) ? $options['bitbucket_access_token'] : null;
 			$bbserver_token  = ! empty( $options['bbserver_access_token'] ) ? $options['bbserver_access_token'] : null;
 			$token           = ! empty( $options[ $slug ] ) ? $options[ $slug ] : null;
 			$token           = null === $token && $bitbucket_org ? $bitbucket_token : $token;
 			$token           = null === $token && ! $bitbucket_org ? $bbserver_token : $token;
 
-			$credentials['token'] = $token;
-			$credentials['type']  = 'bitbucket';
+			$credentials['type']       = 'bitbucket';
+			$credentials['isset']      = true;
+			$credentials['token']      = isset( $token ) ? $token : null;
+			$credentials['enterprise'] = ! $bitbucket_org;
 		}
 
 		return $credentials;
