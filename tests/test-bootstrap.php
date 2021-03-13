@@ -33,8 +33,9 @@ class BootstrapTest extends WP_UnitTestCase {
 
 	public function test_set_auth_required() {
 		$expected = [
-			'bitbucket_private' => false,
-			'bitbucket_server'  => false,
+			'bitbucket'         => false,
+			'bitbucket_private' => true,
+			'bitbucket_server'  => true,
 		];
 		$acutal = (new Bootstrap())->set_auth_required([]);
 		$this->assertEqualSetsWithIndex($expected, $acutal);
@@ -44,7 +45,11 @@ class BootstrapTest extends WP_UnitTestCase {
 		$org             = new \stdClass();
 		$org->git        = 'bitbucket';
 		$org->enterprise = null;
-		$expected_org    = ['git' => 'bitbucket', 'base_uri' => 'https://api.bitbucket.org', 'base_download' => 'https://bitbucket.org'];
+		$expected_org    = [
+			'git'           => 'bitbucket',
+			'base_uri'      => 'https://api.bitbucket.org',
+			'base_download' => 'https://bitbucket.org',
+		];
 
 		$actual_org   = (new Bootstrap())->set_repo_type_data([], $org);
 		$this->assertEqualSetsWithIndex($expected_org, $actual_org);
@@ -53,7 +58,11 @@ class BootstrapTest extends WP_UnitTestCase {
 		$enterprise->git            = 'bitbucket';
 		$enterprise->enterprise     = 'https://mybitbucket.example.com';
 		$enterprise->enterprise_api = 'https://api.mybitbucket.example.com';
-		$expected_enterprise        = ['git' => 'bitbucket', 'base_uri' => 'https://api.mybitbucket.example.com', 'base_download' => 'https://mybitbucket.example.com'];
+		$expected_enterprise        = [
+			'git'           => 'bitbucket',
+			'base_uri'      => 'https://api.mybitbucket.example.com',
+			'base_download' => 'https://mybitbucket.example.com',
+		];
 
 		$actual_enterprise   = (new Bootstrap())->set_repo_type_data([], $enterprise);
 		$this->assertEqualSetsWithIndex($expected_enterprise, $actual_enterprise);
