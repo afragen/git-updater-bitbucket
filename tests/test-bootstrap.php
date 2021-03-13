@@ -21,12 +21,13 @@ class BootstrapTest extends WP_UnitTestCase {
 	}
 
 	public function test_add_repo_parts() {
-		$empty = ['types' => '', 'uris' => ''];
-		$test  = [
+		$empty     = ['types' => '', 'uris' => ''];
+		$expected  = [
 			'types' => ['Bitbucket' => 'bitbucket_plugin'],
 			'uris'  => ['Bitbucket' => 'https://bitbucket.org/'],
 		];
+		$acutal = (new Bootstrap())->add_repo_parts($empty, 'plugin');
 
-		$this->assertSame($test, (new Bootstrap())->add_repo_parts($empty, 'plugin'));
+		$this->assertEqualSetsWithIndex($expected, $acutal);
 	}
 }
