@@ -64,7 +64,7 @@ class BootstrapTest extends WP_UnitTestCase {
 			'base_download' => 'https://mybitbucket.example.com',
 		];
 
-		$actual_enterprise   = (new Bootstrap())->set_repo_type_data([], $enterprise);
+		$actual_enterprise = (new Bootstrap())->set_repo_type_data([], $enterprise);
 		$this->assertEqualSetsWithIndex($expected_enterprise, $actual_enterprise);
 	}
 
