@@ -69,8 +69,6 @@ class BootstrapTest extends WP_UnitTestCase {
 	}
 
 	public function test_parse_headers() {
-		//$git = 'Bitbucket';
-		//$api['enterprise_api'] = 'https://api.example.com';
 		$test = [
 			'host' => null,
 			'base_uri' => 'https://api.example.com',
@@ -79,6 +77,6 @@ class BootstrapTest extends WP_UnitTestCase {
 		$expected_rest_api = 'https://api.example.com/rest/api';
 		$actual   = (new Bootstrap())->parse_headers($test, 'Bitbucket');
 
-		$this->assertSame($expected_rest_api, $actual['enterprise']);
+		$this->assertSame($expected_rest_api, $actual['enterprise_api']);
 	}
 }
