@@ -124,4 +124,14 @@ class BootstrapTest extends WP_UnitTestCase {
 		$this->assertEqualSetsWithIndex($credentials_expected, $actual);
 		$this->assertEqualSetsWithIndex($credentials_expected_enterprise, $actual_enterprise);
 	}
+
+	public function test_get_icon_data() {
+		$icon_data           = ['headers' => [], 'icons'=>[]];
+		$expected['headers'] = ['BitbucketPluginURI' => 'Bitbucket Plugin URI'];
+		$expected['icons']   = ['bitbucket' => 'git-updater-bitbucket/assets/bitbucket-logo.svg' ];
+
+		$actual = (new Bootstrap())->set_git_icon_data($icon_data, 'Plugin');
+
+		$this->assertEqualSetsWithIndex($expected, $actual);
+	}
 }
