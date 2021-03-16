@@ -64,6 +64,7 @@ class Bootstrap {
 		add_filter( 'gu_git_servers', [ $this, 'set_git_servers' ], 10, 1 );
 		add_filter( 'gu_installed_apis', [ $this, 'set_installed_apis' ], 10, 1 );
 		add_filter( 'gu_post_api_response_body', [ $this, 'convert_remote_body_response' ], 10, 2 );
+		add_filter( 'gu_parse_api_branches', [ $this, 'parse_branches' ], 10, 2 );
 		add_filter( 'gu_parse_release_asset', [ $this, 'parse_release_asset' ], 10, 4 );
 		add_filter( 'gu_install_remote_install', [ $this, 'set_remote_install_data' ], 10, 2 );
 		add_filter( 'gu_get_language_pack_json', [ $this, 'set_language_pack_json' ], 10, 4 );
@@ -288,6 +289,21 @@ class Bootstrap {
 			if ( null === json_decode( $body ) ) {
 				$response['body'] = json_encode( $body );
 			}
+		}
+
+		return $response;
+	}
+
+	/**
+	 * Parse API response that returns as stdClass.
+	 *
+	 * @param  string          $git      Name of API, eg 'github'.
+	 * @param  array|\stdClass $response API response.
+	 * @return array|\stdClass
+	 */
+	public function parse_branches( $response, $git ) {
+		if ( in_array( $git, [ 'bitbucket', 'bbserver' ], true ) ) {
+			$response = isset( $response->values ) ? $response->values : $response;
 		}
 
 		return $response;

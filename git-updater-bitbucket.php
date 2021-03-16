@@ -13,7 +13,7 @@
  * Plugin Name:       GitHub Updater - Bitbucket
  * Plugin URI:        https://github.com/afragen/git-updater-bitbucket
  * Description:       Add Bitbucket and Bitbucket Server repositories to the GitHub Updater plugin.
- * Version:           0.7.0
+ * Version:           0.7.0.1
  * Author:            Andy Fragen
  * License:           MIT
  * Network:           true

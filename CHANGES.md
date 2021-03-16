@@ -1,4 +1,5 @@
 [unreleased]
+* add filter `gu_parse_api_branches`
 
 #### 0.7.0 / 2021-03-15 🎂
 * add filter `gu_post_api_response_body`
