@@ -79,4 +79,49 @@ class BootstrapTest extends WP_UnitTestCase {
 
 		$this->assertSame($expected_rest_api, $actual['enterprise_api']);
 	}
+
+	public function test_set_credentials() {
+		$credentials = [
+			'api.wordpress' => false,
+			'isset'         => false,
+			'token'         => null,
+			'type'          => null,
+			'enterprise'    => null,
+		];
+		$args = [
+			'type'          => 'bitbucket',
+			'headers'       => ['host' => 'bitbucket.org'],
+			'options'       => ['bitbucket_access_token' => 'xxxx'],
+			'slug'          => '',
+			'object'        => new \stdClass,
+		];
+		$args_enterprise = [
+			'type'          => 'bitbucket',
+			'headers'       => ['host' => 'mybitbucket.org'],
+			'options'       => ['bbserver_access_token' => 'yyyy'],
+			'slug'          => '',
+			'object'        => new \stdClass,
+		];
+
+		$credentials_expected =[
+			'api.wordpress' => false,
+			'type'          => 'bitbucket',
+			'isset'         => true,
+			'token'         => 'xxxx',
+			'enterprise'    => false,
+		];
+		$credentials_expected_enterprise =[
+			'api.wordpress' => false,
+			'type'          => 'bitbucket',
+			'isset'         => true,
+			'token'         => 'yyyy',
+			'enterprise'    => true,
+		];
+
+		$actual            = (new Bootstrap())->set_credentials($credentials, $args);
+		$actual_enterprise = (new Bootstrap())->set_credentials($credentials, $args_enterprise);
+
+		$this->assertEqualSetsWithIndex($credentials_expected, $actual);
+		$this->assertEqualSetsWithIndex($credentials_expected_enterprise, $actual_enterprise);
+	}
 }
