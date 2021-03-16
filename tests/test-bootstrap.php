@@ -64,17 +64,74 @@ class BootstrapTest extends WP_UnitTestCase {
 			'base_download' => 'https://mybitbucket.example.com',
 		];
 
-		$actual_enterprise   = (new Bootstrap())->set_repo_type_data([], $enterprise);
+		$actual_enterprise = (new Bootstrap())->set_repo_type_data([], $enterprise);
 		$this->assertEqualSetsWithIndex($expected_enterprise, $actual_enterprise);
 	}
 
 	public function test_parse_headers() {
-		$git = 'Bitbucket';
-		$api = 'https://api.example.com';
+		$test = [
+			'host'     => null,
+			'base_uri' => 'https://api.example.com',
+		];
 
-		$expected = 'https://api.example.com/rest/api';
-		$actual   = (new Bootstrap())->parse_headers('https://api.example.com', 'Bitbucket');
+		$expected_rest_api = 'https://api.example.com/rest/api';
+		$actual            = (new Bootstrap())->parse_headers($test, 'Bitbucket');
 
-		$this->assertSame($expected, $actual);
+		$this->assertSame($expected_rest_api, $actual['enterprise_api']);
+	}
+
+	public function test_set_credentials() {
+		$credentials = [
+			'api.wordpress' => false,
+			'isset'         => false,
+			'token'         => null,
+			'type'          => null,
+			'enterprise'    => null,
+		];
+		$args = [
+			'type'          => 'bitbucket',
+			'headers'       => ['host' => 'bitbucket.org'],
+			'options'       => ['bitbucket_access_token' => 'xxxx'],
+			'slug'          => '',
+			'object'        => new \stdClass,
+		];
+		$args_enterprise = [
+			'type'          => 'bitbucket',
+			'headers'       => ['host' => 'mybitbucket.org'],
+			'options'       => ['bbserver_access_token' => 'yyyy'],
+			'slug'          => '',
+			'object'        => new \stdClass,
+		];
+
+		$credentials_expected =[
+			'api.wordpress' => false,
+			'type'          => 'bitbucket',
+			'isset'         => true,
+			'token'         => 'xxxx',
+			'enterprise'    => false,
+		];
+		$credentials_expected_enterprise =[
+			'api.wordpress' => false,
+			'type'          => 'bitbucket',
+			'isset'         => true,
+			'token'         => 'yyyy',
+			'enterprise'    => true,
+		];
+
+		$actual            = (new Bootstrap())->set_credentials($credentials, $args);
+		$actual_enterprise = (new Bootstrap())->set_credentials($credentials, $args_enterprise);
+
+		$this->assertEqualSetsWithIndex($credentials_expected, $actual);
+		$this->assertEqualSetsWithIndex($credentials_expected_enterprise, $actual_enterprise);
+	}
+
+	public function test_get_icon_data() {
+		$icon_data           = ['headers' => [], 'icons'=>[]];
+		$expected['headers'] = ['BitbucketPluginURI' => 'Bitbucket Plugin URI'];
+		$expected['icons']   = ['bitbucket' => 'git-updater-bitbucket/assets/bitbucket-logo.svg' ];
+
+		$actual = (new Bootstrap())->set_git_icon_data($icon_data, 'Plugin');
+
+		$this->assertEqualSetsWithIndex($expected, $actual);
 	}
 }
