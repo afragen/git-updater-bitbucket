@@ -56,6 +56,7 @@ class Bootstrap {
 		add_filter( 'gu_get_repo_parts', [ $this, 'add_repo_parts' ], 10, 2 );
 		add_filter( 'gu_parse_enterprise_headers', [ $this, 'parse_headers' ], 10, 2 );
 		add_filter( 'gu_settings_auth_required', [ $this, 'set_auth_required' ], 10, 1 );
+		add_filter( 'gu_display_repos', [ $this, 'set_display_bbserver_repos' ], 10, 3 );
 		add_filter( 'gu_get_repo_api', [ $this, 'set_repo_api' ], 10, 3 );
 		add_filter( 'gu_api_repo_type_data', [ $this, 'set_repo_type_data' ], 10, 2 );
 		add_filter( 'gu_api_url_type', [ $this, 'set_api_url_data' ], 10, 4 );
@@ -121,6 +122,31 @@ class Bootstrap {
 				'bitbucket_server'  => true,
 			]
 		);
+	}
+
+	/**
+	 * Return bbserver repo types to display in Settings.
+	 *
+	 * @param array  $type_repos Array of repo objects to display.
+	 * @param array  $repos      Array of repos.
+	 * @param string $gitName    of API, eg 'github'.
+	 * @return array
+	 */
+	public function set_display_bbserver_repos( $type_repos, $repos, $git ) {
+		$bbserver_repos = [];
+
+		if ( 'bbserver' === $git ) {
+			$bbserver_repos = array_filter(
+				$repos,
+				function ( $e ) use ( $git ) {
+					if ( ! empty( $e->enterprise ) ) {
+						return false !== stripos( $e->git, 'bitbucket' );
+					}
+				}
+			);
+		}
+
+		return array_merge( $type_repos, $bbserver_repos );
 	}
 
 	/**
