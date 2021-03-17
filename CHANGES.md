@@ -1,4 +1,6 @@
 [unreleased]
+
+#### 0.7.1 / 2021-03-16
 * add filter `gu_parse_api_branches`
 * add filter `gu_display_repos`
 * add filter `gu_running_git_servers`
