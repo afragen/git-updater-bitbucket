@@ -56,14 +56,18 @@ class Bootstrap {
 		add_filter( 'gu_get_repo_parts', [ $this, 'add_repo_parts' ], 10, 2 );
 		add_filter( 'gu_parse_enterprise_headers', [ $this, 'parse_headers' ], 10, 2 );
 		add_filter( 'gu_settings_auth_required', [ $this, 'set_auth_required' ], 10, 1 );
+		add_filter( 'gu_display_repos', [ $this, 'set_display_bitbucket_repos' ], 10, 3 );
 		add_filter( 'gu_get_repo_api', [ $this, 'set_repo_api' ], 10, 3 );
 		add_filter( 'gu_api_repo_type_data', [ $this, 'set_repo_type_data' ], 10, 2 );
 		add_filter( 'gu_api_url_type', [ $this, 'set_api_url_data' ], 10, 4 );
 		add_filter( 'gu_post_get_credentials', [ $this, 'set_credentials' ], 10, 2 );
 		add_filter( 'gu_get_auth_header', [ $this, 'set_auth_header' ], 10, 2 );
+		add_filter( 'gu_decode_response', [ $this, 'decode_response' ], 10, 2 );
 		add_filter( 'gu_git_servers', [ $this, 'set_git_servers' ], 10, 1 );
+		add_filter( 'gu_running_git_servers', [ $this, 'set_running_enterprise_servers' ], 10, 2 );
 		add_filter( 'gu_installed_apis', [ $this, 'set_installed_apis' ], 10, 1 );
 		add_filter( 'gu_post_api_response_body', [ $this, 'convert_remote_body_response' ], 10, 2 );
+		add_filter( 'gu_parse_api_branches', [ $this, 'parse_branches' ], 10, 2 );
 		add_filter( 'gu_parse_release_asset', [ $this, 'parse_release_asset' ], 10, 4 );
 		add_filter( 'gu_install_remote_install', [ $this, 'set_remote_install_data' ], 10, 2 );
 		add_filter( 'gu_get_language_pack_json', [ $this, 'set_language_pack_json' ], 10, 4 );
@@ -120,6 +124,37 @@ class Bootstrap {
 				'bitbucket_server'  => true,
 			]
 		);
+	}
+
+	/**
+	 * Return bbserver repo types to display in Settings.
+	 *
+	 * @param  array  $type_repos Array of repo objects to display.
+	 * @param  array  $repos      Array of repos.
+	 * @param  string $gitName    of API, eg 'github'.
+	 * @return array
+	 */
+	public function set_display_bitbucket_repos( $type_repos, $repos, $git ) {
+		$bbserver_repos = [];
+
+		if ( in_array( $git, [ 'bitbucket', 'bbserver' ], true ) ) {
+			$bbserver_repos = array_filter(
+				$repos,
+				function ( $e ) use ( $git ) {
+					if ( ! empty( $e->enterprise ) ) {
+						return false !== stripos( $e->git, 'bitbucket' );
+					}
+				}
+			);
+		}
+		if ( 'bitbucket' === $git ) {
+			return array_diff_key( $type_repos, $bbserver_repos );
+		}
+		if ( 'bbserver' === $git ) {
+			return $bbserver_repos;
+		}
+
+		return $type_repos;
 	}
 
 	/**
@@ -247,6 +282,23 @@ class Bootstrap {
 	}
 
 	/**
+	 * Decode API response.
+	 *
+	 * @param \stdClass $response API response object.
+	 * @param string    $gitName  of API, eg 'github'.
+	 *
+	 * @return \stdClass
+	 */
+	public function decode_response( $response, $git ) {
+		if ( 'bbserver' === $git ) {
+			// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
+			$response = isset( $response->content ) ? base64_decode( $response->content ) : $response;
+		}
+
+		return $response;
+	}
+
+	/**
 	 * Add API as git server.
 	 *
 	 * @param array $git_servers Array of git servers.
@@ -255,6 +307,30 @@ class Bootstrap {
 	 */
 	public function set_git_servers( $git_servers ) {
 		return array_merge( $git_servers, [ 'bitbucket' => 'Bitbucket' ] );
+	}
+
+	/**
+	 * Set running enterprise git servers.
+	 *
+	 * @param array $servers Array of repository git types.
+	 * @param array $repos   Array of repositories objects.
+	 *
+	 * @return array
+	 */
+	public function set_running_enterprise_servers( $servers, $repos ) {
+		$bbservers = array_map(
+			function ( $e ) {
+				if ( ! empty( $e->enterprise ) ) {
+					if ( 'bitbucket' === $e->git ) {
+						return 'bbserver';
+					}
+				}
+			},
+			$repos
+		);
+		$bbservers = array_filter( $bbservers );
+
+		return array_merge( $servers, $bbservers );
 	}
 
 	/**
@@ -288,6 +364,21 @@ class Bootstrap {
 			if ( null === json_decode( $body ) ) {
 				$response['body'] = json_encode( $body );
 			}
+		}
+
+		return $response;
+	}
+
+	/**
+	 * Parse API response that returns as stdClass.
+	 *
+	 * @param  string          $git      Name of API, eg 'github'.
+	 * @param  array|\stdClass $response API response.
+	 * @return array|\stdClass
+	 */
+	public function parse_branches( $response, $git ) {
+		if ( in_array( $git, [ 'bitbucket', 'bbserver' ], true ) ) {
+			$response = isset( $response->values ) ? $response->values : $response;
 		}
 
 		return $response;
