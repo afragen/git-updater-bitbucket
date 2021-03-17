@@ -63,6 +63,7 @@ class Bootstrap {
 		add_filter( 'gu_post_get_credentials', [ $this, 'set_credentials' ], 10, 2 );
 		add_filter( 'gu_get_auth_header', [ $this, 'set_auth_header' ], 10, 2 );
 		add_filter( 'gu_git_servers', [ $this, 'set_git_servers' ], 10, 1 );
+		add_filter( 'gu_running_git_servers', [ $this, 'set_running_enterprise_servers' ], 10, 2 );
 		add_filter( 'gu_installed_apis', [ $this, 'set_installed_apis' ], 10, 1 );
 		add_filter( 'gu_post_api_response_body', [ $this, 'convert_remote_body_response' ], 10, 2 );
 		add_filter( 'gu_parse_api_branches', [ $this, 'parse_branches' ], 10, 2 );
@@ -282,6 +283,30 @@ class Bootstrap {
 	 */
 	public function set_git_servers( $git_servers ) {
 		return array_merge( $git_servers, [ 'bitbucket' => 'Bitbucket' ] );
+	}
+
+	/**
+	 * Set running enterprise git servers.
+	 *
+	 * @param array $servers Array of repository git types.
+	 * @param array $repos   Array of repositories objects.
+	 *
+	 * @return array
+	 */
+	public function set_running_enterprise_servers( $servers, $repos ) {
+		$bbservers = array_map(
+			function ( $e ) {
+				if ( ! empty( $e->enterprise ) ) {
+					if ( 'bitbucket' === $e->git ) {
+						return 'bbserver';
+					}
+				}
+			},
+			$repos
+		);
+		$bbservers = array_filter( $bbservers );
+
+		return array_merge( $servers, $bbservers );
 	}
 
 	/**
