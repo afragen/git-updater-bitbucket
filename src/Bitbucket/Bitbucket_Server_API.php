@@ -475,7 +475,7 @@ class Bitbucket_Server_API extends Bitbucket_API {
 			$install['download_link'] = add_query_arg(
 				[
 					'prefix' => $headers['repo'] . '/',
-					'at'     => $install['github_updater_branch'],
+					'at'     => $install['git_updater_branch'],
 					'format' => 'zip',
 				],
 				$install['download_link']
