@@ -8,7 +8,7 @@
  * @package   git-updater-bitbucket
  */
 
-namespace Fragen\GitHub_Updater\API;
+namespace Fragen\Git_Updater\API;
 
 use Fragen\Singleton;
 

@@ -1,7 +1,7 @@
 <?php
 /**
  * Git Updater Bitbucket.
- * Requires GitHub Updater plugin.
+ * Requires Git Updater plugin.
  *
  * @package git-updater-bitbucket
  * @author  Andy Fragen
@@ -10,10 +10,10 @@
  */
 
 /**
- * Plugin Name:       GitHub Updater - Bitbucket
+ * Plugin Name:       Git Updater - Bitbucket
  * Plugin URI:        https://github.com/afragen/git-updater-bitbucket
- * Description:       Add Bitbucket and Bitbucket Server repositories to the GitHub Updater plugin.
- * Version:           0.7.1
+ * Description:       Add Bitbucket and Bitbucket Server repositories to the Git Updater plugin.
+ * Version:           0.8.0
  * Author:            Andy Fragen
  * License:           MIT
  * Network:           true

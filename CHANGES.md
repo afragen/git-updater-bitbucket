@@ -1,4 +1,7 @@
 [unreleased]
+#### 0.8.0 / 2021-03-18
+* update namespacing
+* requires Git Updater
 
 #### 0.7.1 / 2021-03-16
 * add filter `gu_parse_api_branches`
