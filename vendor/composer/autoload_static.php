@@ -10,7 +10,7 @@ class ComposerStaticInitfe4e5443566419180892616d97d19069
         'F' => 
         array (
             'Fragen\\Git_Updater\\Bitbucket\\' => 29,
-            'Fragen\\GitHub_Updater\\API\\' => 26,
+            'Fragen\\Git_Updater\\API\\' => 23,
         ),
     );
 
@@ -19,7 +19,7 @@ class ComposerStaticInitfe4e5443566419180892616d97d19069
         array (
             0 => __DIR__ . '/../..' . '/src',
         ),
-        'Fragen\\GitHub_Updater\\API\\' => 
+        'Fragen\\Git_Updater\\API\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src/Bitbucket',
         ),

@@ -10,8 +10,8 @@
 
 namespace Fragen\Git_Updater\Bitbucket;
 
-use Fragen\GitHub_Updater\API\Bitbucket_API;
-use Fragen\GitHub_Updater\API\Bitbucket_Server_API;
+use Fragen\Git_Updater\API\Bitbucket_API;
+use Fragen\Git_Updater\API\Bitbucket_Server_API;
 
 /*
  * Exit if called directly.
@@ -40,7 +40,7 @@ class Bootstrap {
 	 */
 	public function run() {
 		// Exit if GitHub Updater not running.
-		if ( ! class_exists( '\\Fragen\\GitHub_Updater\\Bootstrap' ) ) {
+		if ( ! class_exists( '\\Fragen\\Git_Updater\\Bootstrap' ) ) {
 			return false;
 		}
 
@@ -131,7 +131,7 @@ class Bootstrap {
 	 *
 	 * @param  array  $type_repos Array of repo objects to display.
 	 * @param  array  $repos      Array of repos.
-	 * @param  string $gitName    of API, eg 'github'.
+	 * @param  string $git        Name    of API, eg 'github'.
 	 * @return array
 	 */
 	public function set_display_bitbucket_repos( $type_repos, $repos, $git ) {
@@ -285,7 +285,7 @@ class Bootstrap {
 	 * Decode API response.
 	 *
 	 * @param \stdClass $response API response object.
-	 * @param string    $gitName  of API, eg 'github'.
+	 * @param string    $git      Name  of API, eg 'github'.
 	 *
 	 * @return \stdClass
 	 */
@@ -372,8 +372,8 @@ class Bootstrap {
 	/**
 	 * Parse API response that returns as stdClass.
 	 *
-	 * @param  string          $git      Name of API, eg 'github'.
 	 * @param  array|\stdClass $response API response.
+	 * @param  string          $git      Name of API, eg 'github'.
 	 * @return array|\stdClass
 	 */
 	public function parse_branches( $response, $git ) {

@@ -1,7 +1,7 @@
 # Git Updater - Bitbucket/Bitbucket Server
 
-* Contributors: afragen
-* Tags: gitlab, api, git updater, github updater
+* Contributors: afragen, limikael
+* Tags: bitbucket, api, git updater, github updater
 * Requires at least: 5.2
 * Requires PHP: 7.0
 * Tested up to: 5.7

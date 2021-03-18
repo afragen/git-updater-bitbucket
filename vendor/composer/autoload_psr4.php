@@ -7,5 +7,5 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Fragen\\Git_Updater\\Bitbucket\\' => array($baseDir . '/src'),
-    'Fragen\\GitHub_Updater\\API\\' => array($baseDir . '/src/Bitbucket'),
+    'Fragen\\Git_Updater\\API\\' => array($baseDir . '/src/Bitbucket'),
 );

@@ -6,8 +6,8 @@
 
 ### Bitbucket and Bitbucket Server API for Git Updater plugin
 
-* Contributors: [Andy Fragen](https://github.com/afragen), [contributors](https://github.com/afragen/git-updater-bitbucket/graphs/contributors)
-* Tags: gitlab, api, git updater, github updater
+* Contributors: [Andy Fragen](https://github.com/afragen), [Mikael Lindqvist](https://github.com/limikael), [contributors](https://github.com/afragen/git-updater-bitbucket/graphs/contributors)
+* Tags: bitbucket, api, git updater, github updater
 * Requires at least: 5.2
 * Requires PHP: 7.0
 * Tested up to: trunk

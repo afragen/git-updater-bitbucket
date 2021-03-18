@@ -22,7 +22,7 @@
   "autoload": {
     "psr-4": {
       "Fragen\\Git_Updater\\Bitbucket\\": "src/",
-      "Fragen\\GitHub_Updater\\API\\": "src/Bitbucket/"
+      "Fragen\\Git_Updater\\API\\": "src/Bitbucket/"
     }
   },
   "scripts": {
