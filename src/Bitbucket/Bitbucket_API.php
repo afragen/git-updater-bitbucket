@@ -537,7 +537,7 @@ class Bitbucket_API extends API implements API_Interface {
 		}
 
 		if ( $bitbucket_org ) {
-			$install['download_link'] = "{$base}/{$install['github_updater_repo']}/get/{$install['github_updater_branch']}.zip";
+			$install['download_link'] = "{$base}/{$install['git_updater_repo']}/get/{$install['git_updater_branch']}.zip";
 
 			if ( ! empty( $install['bitbucket_username'] ) && ! empty( $install['bitbucket_password'] ) ) {
 				$install['options'][ $install['repo'] ] = "{$install['bitbucket_username']}:{$install['bitbucket_password']}";

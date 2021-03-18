@@ -424,7 +424,7 @@ class Bootstrap {
 	 * @return array
 	 */
 	public function set_remote_install_data( $install, $headers ) {
-		if ( 'bitbucket' === $install['github_updater_api'] ) {
+		if ( 'bitbucket' === $install['git_updater_api'] ) {
 			$install = ( new Bitbucket_API() )->remote_install( $headers, $install );
 			$install = ( new Bitbucket_Server_API() )->remote_install( $headers, $install );
 		}
