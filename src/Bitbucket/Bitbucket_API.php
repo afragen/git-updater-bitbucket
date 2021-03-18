@@ -366,14 +366,14 @@ class Bitbucket_API extends API implements API_Interface {
 			'bitbucket_token',
 			esc_html__( 'Bitbucket Pseudo-Token', 'git-updater-bitbucket' ),
 			[ $this, 'print_section_bitbucket_token' ],
-			'github_updater_bitbucket_install_settings'
+			'git_updater_bitbucket_install_settings'
 		);
 
 		add_settings_field(
 			'bitbucket_username',
 			esc_html__( 'Bitbucket Username', 'git-updater-bitbucket' ),
 			[ Singleton::get_instance( 'Settings', $this ), 'token_callback_text' ],
-			'github_updater_bitbucket_install_settings',
+			'git_updater_bitbucket_install_settings',
 			'bitbucket_token',
 			[
 				'id'    => 'bitbucket_username',
@@ -385,7 +385,7 @@ class Bitbucket_API extends API implements API_Interface {
 			'bitbucket_password',
 			esc_html__( 'Bitbucket Password', 'git-updater-bitbucket' ),
 			[ Singleton::get_instance( 'Settings', $this ), 'token_callback_text' ],
-			'github_updater_bitbucket_install_settings',
+			'git_updater_bitbucket_install_settings',
 			'bitbucket_token',
 			[
 				'id'    => 'bitbucket_password',
@@ -398,7 +398,7 @@ class Bitbucket_API extends API implements API_Interface {
 			'bitbucket_token',
 			esc_html__( 'Bitbucket Pseudo-Token', 'git-updater-bitbucket' ),
 			[ Singleton::get_instance( 'Settings', $this ), 'token_callback_text' ],
-			'github_updater_bitbucket_install_settings',
+			'git_updater_bitbucket_install_settings',
 			'bitbucket_token',
 			[
 				'id'          => 'bitbucket_access_token',
@@ -416,7 +416,7 @@ class Bitbucket_API extends API implements API_Interface {
 				'bitbucket_id',
 				esc_html__( 'Bitbucket Private Repositories', 'git-updater-bitbucket' ),
 				[ $this, 'print_section_bitbucket_info' ],
-				'github_updater_bitbucket_install_settings'
+				'git_updater_bitbucket_install_settings'
 			);
 		}
 	}
@@ -427,7 +427,7 @@ class Bitbucket_API extends API implements API_Interface {
 	 * @return mixed
 	 */
 	public function add_repo_setting_field() {
-		$setting_field['page']            = 'github_updater_bitbucket_install_settings';
+		$setting_field['page']            = 'git_updater_bitbucket_install_settings';
 		$setting_field['section']         = 'bitbucket_id';
 		$setting_field['callback_method'] = [
 			Singleton::get_instance( 'Settings', $this ),
@@ -474,14 +474,14 @@ class Bitbucket_API extends API implements API_Interface {
 			'bitbucket_username',
 			esc_html__( 'Bitbucket Username', 'git-updater-bitbucket' ),
 			[ $this, 'bitbucket_username' ],
-			'github_updater_install_' . $type,
+			'git_updater_install_' . $type,
 			$type
 		);
 		add_settings_field(
 			'bitbucket_password',
 			esc_html__( 'Bitbucket Password', 'git-updater-bitbucket' ),
 			[ $this, 'bitbucket_password' ],
-			'github_updater_install_' . $type,
+			'git_updater_install_' . $type,
 			$type
 		);
 	}
