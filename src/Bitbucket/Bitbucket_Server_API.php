@@ -365,14 +365,14 @@ class Bitbucket_Server_API extends Bitbucket_API {
 			'bitbucket_server_token',
 			esc_html__( 'Bitbucket Server Private Settings', 'git-updater-bitbucket' ),
 			[ $this, 'print_section_bitbucket_token' ],
-			'github_updater_bbserver_install_settings'
+			'git_updater_bbserver_install_settings'
 		);
 
 		add_settings_field(
 			'bitbucket_server_username',
 			esc_html__( 'Bitbucket Server Username', 'git-updater-bitbucket' ),
 			[ Singleton::get_instance( 'Settings', $this ), 'token_callback_text' ],
-			'github_updater_bbserver_install_settings',
+			'git_updater_bbserver_install_settings',
 			'bitbucket_server_token',
 			[
 				'id'    => 'bitbucket_server_username',
@@ -384,7 +384,7 @@ class Bitbucket_Server_API extends Bitbucket_API {
 			'bitbucket_server_password',
 			esc_html__( 'Bitbucket Server Password', 'git-updater-bitbucket' ),
 			[ Singleton::get_instance( 'Settings', $this ), 'token_callback_text' ],
-			'github_updater_bbserver_install_settings',
+			'git_updater_bbserver_install_settings',
 			'bitbucket_server_token',
 			[
 				'id'    => 'bitbucket_server_password',
@@ -397,7 +397,7 @@ class Bitbucket_Server_API extends Bitbucket_API {
 			'bbserver_token',
 			esc_html__( 'Bitbucket Server Pseudo-Token', 'git-updater-bitbucket' ),
 			[ Singleton::get_instance( 'Settings', $this ), 'token_callback_text' ],
-			'github_updater_bbserver_install_settings',
+			'git_updater_bbserver_install_settings',
 			'bitbucket_server_token',
 			[
 				'id'          => 'bbserver_access_token',
@@ -415,7 +415,7 @@ class Bitbucket_Server_API extends Bitbucket_API {
 				'bitbucket_server_id',
 				esc_html__( 'Bitbucket Server Private Repositories', 'git-updater-bitbucket' ),
 				[ $this, 'print_section_bitbucket_info' ],
-				'github_updater_bbserver_install_settings'
+				'git_updater_bbserver_install_settings'
 			);
 		}
 	}
@@ -426,7 +426,7 @@ class Bitbucket_Server_API extends Bitbucket_API {
 	 * @return mixed
 	 */
 	public function add_repo_setting_field() {
-		$setting_field['page']            = 'github_updater_bbserver_install_settings';
+		$setting_field['page']            = 'git_updater_bbserver_install_settings';
 		$setting_field['section']         = 'bitbucket_server_id';
 		$setting_field['callback_method'] = [
 			Singleton::get_instance( 'Settings', $this ),
