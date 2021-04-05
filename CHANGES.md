@@ -1,4 +1,6 @@
 [unreleased]
+
+#### 0.8.1 / 2021-04-05
 * update hooks
 * update assets
 
