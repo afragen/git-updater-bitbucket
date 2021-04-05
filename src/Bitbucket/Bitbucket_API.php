@@ -203,7 +203,7 @@ class Bitbucket_API extends API implements API_Interface {
 		 * @param /stdClass $this->type    Repository object.
 		 * @param string    $branch_switch Branch or tag for rollback or branch switching.
 		 */
-		return apply_filters( 'github_updater_post_construct_download_link', $download_link, $this->type, $branch_switch );
+		return apply_filters( 'gu_post_construct_download_link', $download_link, $this->type, $branch_switch );
 	}
 
 	/**
@@ -443,7 +443,7 @@ class Bitbucket_API extends API implements API_Interface {
 	 */
 	private function add_settings_subtab() {
 		add_filter(
-			'github_updater_add_settings_subtabs',
+			'gu_add_settings_subtabs',
 			function ( $subtabs ) {
 				return array_merge( $subtabs, [ 'bitbucket' => esc_html__( 'Bitbucket', 'git-updater-bitbucket' ) ] );
 			}
