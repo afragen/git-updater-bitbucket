@@ -30,42 +30,42 @@ msgstr ""
 msgid "Andy Fragen"
 msgstr ""
 
-#: src/Bitbucket/Bitbucket_API.php:367
-#: src/Bitbucket/Bitbucket_API.php:399
+#: src/Bitbucket/Bitbucket_API.php:360
+#: src/Bitbucket/Bitbucket_API.php:392
 msgid "Bitbucket Pseudo-Token"
 msgstr ""
 
-#: src/Bitbucket/Bitbucket_API.php:374
-#: src/Bitbucket/Bitbucket_API.php:475
+#: src/Bitbucket/Bitbucket_API.php:367
+#: src/Bitbucket/Bitbucket_API.php:468
 msgid "Bitbucket Username"
 msgstr ""
 
-#: src/Bitbucket/Bitbucket_API.php:386
-#: src/Bitbucket/Bitbucket_API.php:482
+#: src/Bitbucket/Bitbucket_API.php:379
+#: src/Bitbucket/Bitbucket_API.php:475
 msgid "Bitbucket Password"
 msgstr ""
 
-#: src/Bitbucket/Bitbucket_API.php:417
+#: src/Bitbucket/Bitbucket_API.php:410
 msgid "Bitbucket Private Repositories"
 msgstr ""
 
-#: src/Bitbucket/Bitbucket_API.php:448
+#: src/Bitbucket/Bitbucket_API.php:441
 msgid "Bitbucket"
 msgstr ""
 
-#: src/Bitbucket/Bitbucket_API.php:457
+#: src/Bitbucket/Bitbucket_API.php:450
 msgid "Enter `username:password` if private repository. Don't forget the colon `:`."
 msgstr ""
 
-#: src/Bitbucket/Bitbucket_API.php:464
+#: src/Bitbucket/Bitbucket_API.php:457
 msgid "Enter your personal Bitbucket username and password. It will automatically be converted to a pseudo-token."
 msgstr ""
 
-#: src/Bitbucket/Bitbucket_API.php:498
+#: src/Bitbucket/Bitbucket_API.php:491
 msgid "Enter Bitbucket username."
 msgstr ""
 
-#: src/Bitbucket/Bitbucket_API.php:513
+#: src/Bitbucket/Bitbucket_API.php:506
 msgid "Enter Bitbucket password."
 msgstr ""
 
