@@ -1,21 +1,21 @@
 # Copyright (C) 2021 Andy Fragen
-# This file is distributed under the same license as the GitHub Updater - Bitbucket plugin.
+# This file is distributed under the same license as the Git Updater - Bitbucket plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: GitHub Updater - Bitbucket 0.5.0\n"
+"Project-Id-Version: Git Updater - Bitbucket 0.8.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/git-updater-bitbucket\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2021-03-12T22:11:24+00:00\n"
+"POT-Creation-Date: 2021-04-12T00:44:27+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.4.0\n"
 "X-Domain: git-updater-bitbucket\n"
 
 #. Plugin Name of the plugin
-msgid "GitHub Updater - Bitbucket"
+msgid "Git Updater - Bitbucket"
 msgstr ""
 
 #. Plugin URI of the plugin
@@ -23,7 +23,7 @@ msgid "https://github.com/afragen/git-updater-bitbucket"
 msgstr ""
 
 #. Description of the plugin
-msgid "Add Bitbucket and Bitbucket Server repositories to the GitHub Updater plugin."
+msgid "Add Bitbucket and Bitbucket Server repositories to the Git Updater plugin."
 msgstr ""
 
 #. Author of the plugin
