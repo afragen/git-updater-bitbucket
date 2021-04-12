@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => 'b659cb0ba5f83c1ce6bf084ed0f03a933989d2c3',
+    'reference' => '3d22eaf0141ba049b4eafa57a8c7f3fed0d7776f',
     'name' => 'afragen/git-updater-bitbucket',
   ),
   'versions' => 
@@ -18,7 +18,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => 'b659cb0ba5f83c1ce6bf084ed0f03a933989d2c3',
+      'reference' => '3d22eaf0141ba049b4eafa57a8c7f3fed0d7776f',
     ),
   ),
 );
