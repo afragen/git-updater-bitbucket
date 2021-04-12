@@ -1,4 +1,5 @@
 [unreleased]
+* fix PHP error, filter must return value
 
 #### 0.9.0 / 2021-04-11
 * remove branch set from constructor

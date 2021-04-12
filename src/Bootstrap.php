@@ -247,7 +247,7 @@ class Bootstrap {
 			$slug    = $args['slug'];
 			$object  = $args['object'];
 		} else {
-			return;
+			return $credentials;
 		}
 		if ( 'bitbucket' === $type || $object instanceof Bitbucket_API || $object instanceof Bitbucket_Server_API ) {
 			$bitbucket_org   = in_array( $headers['host'], [ 'bitbucket.org', 'api.bitbucket.org' ], true );
