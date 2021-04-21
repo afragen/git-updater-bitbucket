@@ -586,7 +586,7 @@ class Bitbucket_API extends API implements API_Interface {
 		}
 		if ( $save_options ) {
 			static::$options = array_merge( $options, $bitbucket_token, $bbserver_token );
-			update_site_option( 'github_updater', static::$options );
+			update_site_option( 'git_updater', static::$options );
 		}
 	}
 }
