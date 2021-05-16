@@ -494,11 +494,6 @@ class Bitbucket_Server_API extends Bitbucket_API {
 					$install['options']['bitbucket_access_token'] = $install['bitbucket_access_token'];
 				}
 			}
-			if ( ! $bitbucket_org ) {
-				$token = ! empty( $install['options']['bitbucket_access_token'] )
-				? $install['options']['bitbucket_access_token']
-				: $options['bbserver_access_token'];
-			}
 
 			if ( ! empty( static::$options['bbserver_access_token'] ) ) {
 				unset( $install['options']['bitbucket_access_token'] );
