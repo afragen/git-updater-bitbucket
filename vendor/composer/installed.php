@@ -1,24 +1,24 @@
 <?php return array (
   'root' => 
   array (
-    'pretty_version' => 'dev-develop',
-    'version' => 'dev-develop',
+    'pretty_version' => 'dev-main',
+    'version' => 'dev-main',
     'aliases' => 
     array (
     ),
-    'reference' => '7698a13bba660fae9072eb7ec09e4d52315df400',
+    'reference' => '0212cad9fa7398ba97db85e8389400050ee7537f',
     'name' => 'afragen/git-updater-bitbucket',
   ),
   'versions' => 
   array (
     'afragen/git-updater-bitbucket' => 
     array (
-      'pretty_version' => 'dev-develop',
-      'version' => 'dev-develop',
+      'pretty_version' => 'dev-main',
+      'version' => 'dev-main',
       'aliases' => 
       array (
       ),
-      'reference' => '7698a13bba660fae9072eb7ec09e4d52315df400',
+      'reference' => '0212cad9fa7398ba97db85e8389400050ee7537f',
     ),
   ),
 );
