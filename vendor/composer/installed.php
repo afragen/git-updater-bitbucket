@@ -1,22 +1,22 @@
 <?php return array(
     'root' => array(
-        'pretty_version' => 'dev-develop',
-        'version' => 'dev-develop',
+        'pretty_version' => 'dev-main',
+        'version' => 'dev-main',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '2e033b4a63c03ec374227cf5a39f64ba08062efb',
+        'reference' => '5aeb2e51589c2c823b1d9de15bbae504e40f56bb',
         'name' => 'afragen/git-updater-bitbucket',
         'dev' => false,
     ),
     'versions' => array(
         'afragen/git-updater-bitbucket' => array(
-            'pretty_version' => 'dev-develop',
-            'version' => 'dev-develop',
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '2e033b4a63c03ec374227cf5a39f64ba08062efb',
+            'reference' => '5aeb2e51589c2c823b1d9de15bbae504e40f56bb',
             'dev_requirement' => false,
         ),
     ),
