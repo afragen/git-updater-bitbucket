@@ -152,7 +152,12 @@ class Bitbucket_API extends API implements API_Interface {
 		if ( $this->use_release_asset( $branch_switch ) ) {
 			$release_asset = $this->get_release_asset();
 
-			return $this->get_release_asset_redirect( $release_asset, true );
+			$release_asset_redirect = $this->get_release_asset_redirect( $release_asset, true );
+			if ( ! $release_asset_redirect && property_exists( $this->response['release_asset_response'], 'browser_download_url' ) ) {
+				return $this->response['release_asset_response']->browser_download_url;
+			} else {
+				return $release_asset_redirect;
+			}
 		}
 
 		/*

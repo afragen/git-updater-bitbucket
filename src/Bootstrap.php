@@ -33,6 +33,7 @@ add_action(
  * Class Bootstrap
  */
 class Bootstrap {
+
 	/**
 	 * Run the bootstrap.
 	 *
@@ -400,16 +401,18 @@ class Bootstrap {
 	public function parse_release_asset( $response, $git, $request, $obj ) {
 		if ( 'bitbucket' === $git ) {
 			do {
-				$download_base = trailingslashit( $obj->get_api_url( $request, true ) );
-				$assets        = isset( $response->values ) ? $response->values : [];
+				$assets = isset( $response->values ) ? $response->values : [];
 				foreach ( $assets as $asset ) {
 					if ( 1 === count( $assets ) || 0 === strpos( $asset->name, $obj->type->slug ) ) {
-						$response = $download_base . $asset->name;
+						$response = $asset->links->self->href;
 						break;
 					}
 				}
 			} while ( false );
-			$response = is_string( $response ) ? $response : null;
+			$response                    = is_string( $response ) ? $response : null;
+			$asset->browser_download_url = $response;
+			$asset->download_count       = $asset->downloads;
+			$obj->set_repo_cache( 'release_asset_response', $asset );
 		}
 		if ( 'bbserver' === $git ) {
 			// TODO: make work.
