@@ -137,7 +137,7 @@ class Bitbucket_API extends API implements API_Interface {
 	}
 
 	/**
-	 * Construct $this->type->download_link using Bitbucket API
+	 * Construct $this->type->download_link using Bitbucket API.
 	 *
 	 * @param boolean $branch_switch For direct branch changing. Defaults to false.
 	 *
@@ -149,10 +149,19 @@ class Bitbucket_API extends API implements API_Interface {
 		$endpoint           = '';
 
 		// Release asset.
+		// Bitbucket seems to require the release asset redirect for updating
+		// and may use the release asset URL for installing.
 		if ( $this->use_release_asset( $branch_switch ) ) {
 			$release_asset = $this->get_release_asset();
 
-			return $this->get_release_asset_redirect( $release_asset, true );
+			$release_asset_redirect = $this->get_release_asset_redirect( $release_asset, true );
+			if ( ! $release_asset_redirect && property_exists( $this->response['release_asset_response'], 'browser_download_url' ) ) {
+				// For installing.
+				return $this->response['release_asset_response']->browser_download_url;
+			} else {
+				// For updating.
+				return $release_asset_redirect;
+			}
 		}
 
 		/*
