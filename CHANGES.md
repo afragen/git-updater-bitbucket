@@ -1,4 +1,6 @@
 [unreleased]
+
+#### 1.2.1 / 2022-03-21
 * add 'release_asset_response' to selectively use redirect
 
 #### 1.2.0 / 2021-11-15
