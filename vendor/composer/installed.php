@@ -5,9 +5,9 @@
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '3347fdd8507acc67a0c9266cca48f2a615d06891',
+        'reference' => 'ae451d333abddd5b124761a2d8db4a29d9f1ae85',
         'name' => 'afragen/git-updater-bitbucket',
-        'dev' => false,
+        'dev' => true,
     ),
     'versions' => array(
         'afragen/git-updater-bitbucket' => array(
@@ -16,7 +16,7 @@
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '3347fdd8507acc67a0c9266cca48f2a615d06891',
+            'reference' => 'ae451d333abddd5b124761a2d8db4a29d9f1ae85',
             'dev_requirement' => false,
         ),
     ),
