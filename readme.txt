@@ -2,7 +2,7 @@
 
 * Contributors: afragen, limikael
 * Tags: bitbucket, api, git updater, github updater
-* Requires at least: 5.2
+* Requires at least: 5.9
 * Requires PHP: 7.2
 * Tested up to: trunk
 * Stable tag: main

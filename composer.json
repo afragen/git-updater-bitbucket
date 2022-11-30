@@ -1,6 +1,6 @@
 {
   "name": "afragen/git-updater-bitbucket",
-  "description": "Add Bitbucket repositories to GitHub Updater that lack actual GitHub Updater headers.",
+  "description": "Add Bitbucket repositories to GitHub Updater that lack actual Git Updater headers.",
   "type": "wordpress-plugin",
   "license": "MIT",
   "authors": [
