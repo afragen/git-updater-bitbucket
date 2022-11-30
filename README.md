@@ -8,7 +8,7 @@
 
 * Contributors: [Andy Fragen](https://github.com/afragen), [Mikael Lindqvist](https://github.com/limikael), [contributors](https://github.com/afragen/git-updater-bitbucket/graphs/contributors)
 * Tags: bitbucket, api, git updater, github updater
-* Requires at least: 5.2
+* Requires at least: 5.9
 * Requires PHP: 7.2
 * Tested up to: trunk
 * Stable tag: [main](https://github.com/afragen/git-updater-bitbucket/releases/latest)
