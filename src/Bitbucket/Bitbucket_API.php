@@ -155,7 +155,9 @@ class Bitbucket_API extends API implements API_Interface {
 			$release_asset = $this->get_release_asset();
 
 			$release_asset_redirect = $this->get_release_asset_redirect( $release_asset, true );
-			if ( ! $release_asset_redirect && property_exists( $this->response['release_asset_response'], 'browser_download_url' ) ) {
+			if ( ! $release_asset_redirect && isset( $this->response['release_asset_redirect'] )
+				&& property_exists( $this->response['release_asset_response'], 'browser_download_url' )
+			) {
 				// For installing.
 				return $this->response['release_asset_response']->browser_download_url;
 			} else {
