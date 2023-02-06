@@ -3,7 +3,7 @@
         'name' => 'afragen/git-updater-bitbucket',
         'pretty_version' => 'dev-develop',
         'version' => 'dev-develop',
-        'reference' => '7368a039b6f32e8286fde7f6a011d620abd31ab3',
+        'reference' => '0e41eae33c60588d4e5cce9ea88963d6eafe005c',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'afragen/git-updater-bitbucket' => array(
             'pretty_version' => 'dev-develop',
             'version' => 'dev-develop',
-            'reference' => '7368a039b6f32e8286fde7f6a011d620abd31ab3',
+            'reference' => '0e41eae33c60588d4e5cce9ea88963d6eafe005c',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

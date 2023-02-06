@@ -1,15 +1,15 @@
-# Copyright (C) 2022 Andy Fragen
+# Copyright (C) 2023 Andy Fragen
 # This file is distributed under the MIT.
 msgid ""
 msgstr ""
-"Project-Id-Version: Git Updater - Bitbucket 2.0.1\n"
+"Project-Id-Version: Git Updater - Bitbucket 2.0.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/git-updater-bitbucket\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-11-30T23:51:48+00:00\n"
+"POT-Creation-Date: 2023-02-06T02:46:18+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: git-updater-bitbucket\n"
@@ -30,42 +30,42 @@ msgstr ""
 msgid "Andy Fragen"
 msgstr ""
 
-#: src/Bitbucket/Bitbucket_API.php:369
-#: src/Bitbucket/Bitbucket_API.php:401
+#: src/Bitbucket/Bitbucket_API.php:371
+#: src/Bitbucket/Bitbucket_API.php:403
 msgid "Bitbucket Pseudo-Token"
 msgstr ""
 
-#: src/Bitbucket/Bitbucket_API.php:376
-#: src/Bitbucket/Bitbucket_API.php:479
+#: src/Bitbucket/Bitbucket_API.php:378
+#: src/Bitbucket/Bitbucket_API.php:481
 msgid "Bitbucket Username"
 msgstr ""
 
-#: src/Bitbucket/Bitbucket_API.php:388
-#: src/Bitbucket/Bitbucket_API.php:486
+#: src/Bitbucket/Bitbucket_API.php:390
+#: src/Bitbucket/Bitbucket_API.php:488
 msgid "Bitbucket Password"
 msgstr ""
 
-#: src/Bitbucket/Bitbucket_API.php:419
+#: src/Bitbucket/Bitbucket_API.php:421
 msgid "Bitbucket Private Repositories"
 msgstr ""
 
-#: src/Bitbucket/Bitbucket_API.php:450
+#: src/Bitbucket/Bitbucket_API.php:452
 msgid "Bitbucket"
 msgstr ""
 
-#: src/Bitbucket/Bitbucket_API.php:459
+#: src/Bitbucket/Bitbucket_API.php:461
 msgid "Enter `username:password` if private repository. Don't forget the colon `:`."
 msgstr ""
 
-#: src/Bitbucket/Bitbucket_API.php:466
+#: src/Bitbucket/Bitbucket_API.php:468
 msgid "Enter your personal Bitbucket username and password. It will automatically be converted to a pseudo-token."
 msgstr ""
 
-#: src/Bitbucket/Bitbucket_API.php:502
+#: src/Bitbucket/Bitbucket_API.php:504
 msgid "Enter Bitbucket username."
 msgstr ""
 
-#: src/Bitbucket/Bitbucket_API.php:517
+#: src/Bitbucket/Bitbucket_API.php:519
 msgid "Enter Bitbucket password."
 msgstr ""
 
