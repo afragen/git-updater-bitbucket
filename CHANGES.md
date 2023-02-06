@@ -1,5 +1,8 @@
 [unreleased]
 
+#### 2.0.2 / 2023-02-05
+* add variable check
+
 #### 2.0.1 / 2022-11-30
 * add git icon to subtab
 
