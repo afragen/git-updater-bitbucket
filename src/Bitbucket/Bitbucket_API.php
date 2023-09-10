@@ -176,12 +176,10 @@ class Bitbucket_API extends API implements API_Interface {
 			} else {
 				$endpoint .= $this->type->branch . '.zip';
 			}
-		} else {
-			if ( ! empty( $this->type->enterprise_api ) ) {
+		} elseif ( ! empty( $this->type->enterprise_api ) ) {
 				$endpoint = add_query_arg( 'at', $this->type->newest_tag, $endpoint );
-			} else {
-				$endpoint .= $this->type->newest_tag . '.zip';
-			}
+		} else {
+			$endpoint .= $this->type->newest_tag . '.zip';
 		}
 
 		/*
@@ -326,7 +324,7 @@ class Bitbucket_API extends API implements API_Interface {
 		}
 		$branches = [];
 		foreach ( $response as $branch ) {
-			if ( ! \property_exists( $branch, 'name' ) ) {
+			if ( ! property_exists( $branch, 'name' ) ) {
 				continue;
 			}
 			$branches[ $branch->name ]['download']         = $this->construct_download_link( $branch->name );
