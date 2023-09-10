@@ -1,5 +1,8 @@
 [unreleased]
 
+#### 2.0.3 / 2023-09-10
+* WPCS 3.0.0
+
 #### 2.0.2 / 2023-02-05
 * add variable check
 
