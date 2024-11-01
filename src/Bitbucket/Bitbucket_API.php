@@ -552,13 +552,6 @@ class Bitbucket_API extends API implements API_Interface {
 			*/
 			if ( ! empty( $install['bitbucket_access_token'] ) ) {
 				$install['options'][ $install['repo'] ] = $install['bitbucket_access_token'];
-				if ( $bitbucket_org ) {
-					$install['options']['bitbucket_access_token'] = $install['bitbucket_access_token'];
-				}
-			}
-
-			if ( ! empty( static::$options['bitbucket_access_token'] ) ) {
-				unset( $install['options']['bitbucket_access_token'] );
 			}
 		}
 
