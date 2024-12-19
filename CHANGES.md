@@ -1,4 +1,5 @@
 [unreleased]
+* minor update for release asset download link
 
 #### 2.2.0 / 2024-12-11
 * update GA
