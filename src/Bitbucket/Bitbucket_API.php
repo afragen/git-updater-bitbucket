@@ -91,11 +91,13 @@ class Bitbucket_API extends API implements API_Interface {
 	 * Read the remote CHANGES.md file.
 	 *
 	 * @access public
+
+	 * @param null $changes The changelog filename - deprecated.
 	 *
 	 * @return bool
 	 */
-	public function get_remote_changes() {
-		return $this->get_remote_api_changes( 'bitbucket', '/2.0/repositories/:owner/:repo/src/:branch/:changelog' );
+	public function get_remote_changes( $changes ) {
+		return $this->get_remote_api_changes( 'bitbucket', $changes, '/2.0/repositories/:owner/:repo/src/:branch/:changelog' );
 	}
 
 	/**
@@ -132,15 +134,6 @@ class Bitbucket_API extends API implements API_Interface {
 	 */
 	public function get_release_asset() {
 		return $this->get_api_release_asset( 'bitbucket', '/2.0/repositories/:owner/:repo/downloads' );
-	}
-
-	/**
-	 * Return list of files at Bitbucket repo root.
-	 *
-	 * @return void
-	 */
-	public function get_repo_contents() {
-		// return $this->get_remote_api_contents( 'bitbucket', '/2.0/repositories/:owner/:repo/src/:branch/:contents' );
 	}
 
 	/**
