@@ -92,12 +92,12 @@ class Bitbucket_API extends API implements API_Interface {
 	 *
 	 * @access public
 
-	 * @param string $changes The changelog filename - deprecated.
+	 * @param null $changes The changelog filename - deprecated.
 	 *
 	 * @return bool
 	 */
 	public function get_remote_changes( $changes ) {
-		return $this->get_remote_api_changes( 'bitbucket', '/2.0/repositories/:owner/:repo/src/:branch/:changelog' );
+		return $this->get_remote_api_changes( 'bitbucket', $changes, '/2.0/repositories/:owner/:repo/src/:branch/:changelog' );
 	}
 
 	/**
