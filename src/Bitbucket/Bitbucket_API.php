@@ -137,15 +137,6 @@ class Bitbucket_API extends API implements API_Interface {
 	}
 
 	/**
-	 * Return list of files at Bitbucket repo root.
-	 *
-	 * @return void
-	 */
-	public function get_repo_contents() {
-		// return $this->get_remote_api_contents( 'bitbucket', '/2.0/repositories/:owner/:repo/src/:branch/:contents' );
-	}
-
-	/**
 	 * Return list of repository assets.
 	 *
 	 * @return array
