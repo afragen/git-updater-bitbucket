@@ -1,5 +1,9 @@
 [unreleased]
 
+#### 2.3.0 / 2024-12-13
+* minor update for release asset download link
+* update for changes in Git Updater
+
 #### 2.2.0 / 2024-12-11
 * update GA
 * load in `init` for `_load_textdomain_just_in_time`

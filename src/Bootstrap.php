@@ -405,6 +405,7 @@ class Bootstrap {
 			$asset->browser_download_url = $response;
 			$asset->download_count       = $asset->downloads;
 			$obj->set_repo_cache( 'release_asset_response', $asset );
+			$obj->set_repo_cache( 'release_asset_download', $response );
 		}
 		if ( 'bbserver' === $git ) {
 			// TODO: make work.

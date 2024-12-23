@@ -92,12 +92,10 @@ class Bitbucket_API extends API implements API_Interface {
 	 *
 	 * @access public
 	 *
-	 * @param string $changes The changelog filename.
-	 *
 	 * @return bool
 	 */
-	public function get_remote_changes( $changes ) {
-		return $this->get_remote_api_changes( 'bitbucket', $changes, "/2.0/repositories/:owner/:repo/src/:branch/{$changes}" );
+	public function get_remote_changes() {
+		return $this->get_remote_api_changes( 'bitbucket', '/2.0/repositories/:owner/:repo/src/:branch/:changelog' );
 	}
 
 	/**
@@ -106,7 +104,7 @@ class Bitbucket_API extends API implements API_Interface {
 	 * @return bool
 	 */
 	public function get_remote_readme() {
-		return $this->get_remote_api_readme( 'bitbucket', '/2.0/repositories/:owner/:repo/src/:branch/readme.txt' );
+		return $this->get_remote_api_readme( 'bitbucket', '/2.0/repositories/:owner/:repo/src/:branch/:readme' );
 	}
 
 	/**
@@ -137,6 +135,24 @@ class Bitbucket_API extends API implements API_Interface {
 	}
 
 	/**
+	 * Return list of files at Bitbucket repo root.
+	 *
+	 * @return void
+	 */
+	public function get_repo_contents() {
+		// return $this->get_remote_api_contents( 'bitbucket', '/2.0/repositories/:owner/:repo/src/:branch/:contents' );
+	}
+
+	/**
+	 * Return list of repository assets.
+	 *
+	 * @return array
+	 */
+	public function get_repo_assets() {
+		return $this->get_remote_api_assets( 'bitbucket', '/2.0/repositories/:owner/:repo/src/:branch/:path' );
+	}
+
+	/**
 	 * Construct $this->type->download_link using Bitbucket API.
 	 *
 	 * @param boolean $branch_switch For direct branch changing. Defaults to false.
@@ -154,15 +170,17 @@ class Bitbucket_API extends API implements API_Interface {
 		if ( $this->use_release_asset( $branch_switch ) ) {
 			$release_asset = $this->get_release_asset();
 
-			$release_asset_redirect = $this->get_release_asset_redirect( $release_asset, true );
-			if ( ! $release_asset_redirect && isset( $this->response['release_asset_redirect'] )
-				&& property_exists( $this->response['release_asset_response'], 'browser_download_url' )
-			) {
-				// For installing.
-				return $this->response['release_asset_response']->browser_download_url;
-			} else {
+			if ( empty( $this->response['release_asset_redirect'] ) ) {
+				$redirect = $this->get_release_asset_redirect( $release_asset, true );
+				$this->set_repo_cache( 'release_asset_redirect', $redirect );
+			}
+
+			if ( ! empty( $this->response['release_asset_redirect'] ) ) {
 				// For updating.
-				return $release_asset_redirect;
+				return $this->response['release_asset_redirect'];
+			} else {
+				// For installing.
+				return $this->response['release_asset_download'];
 			}
 		}
 
@@ -333,6 +351,27 @@ class Bitbucket_API extends API implements API_Interface {
 		}
 
 		return $branches;
+	}
+
+	/**
+	 * Parse remote assets directory.
+	 *
+	 * @param \stdClass|array $response Response from API call.
+	 *
+	 * @return \stdClass|array
+	 */
+	protected function parse_asset_dir_response( $response ) {
+		$assets = [];
+
+		if ( isset( $response->message ) || isset( $response->error ) ) {
+			return $response;
+		}
+
+		foreach ( $response as $asset ) {
+			$assets[ $asset->name ] = $asset->download_url;
+		}
+
+		return $assets;
 	}
 
 	/**
