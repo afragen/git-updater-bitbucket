@@ -97,7 +97,7 @@ class Bitbucket_API extends API implements API_Interface {
 	 * @return bool
 	 */
 	public function get_remote_changes( $changes ) {
-		return $this->get_remote_api_changes( 'bitbucket', $changes, '/2.0/repositories/:owner/:repo/src/:branch/:changelog' );
+		return $this->get_remote_api_changes( 'bitbucket', '/2.0/repositories/:owner/:repo/src/:branch/:changelog' );
 	}
 
 	/**
@@ -235,6 +235,7 @@ class Bitbucket_API extends API implements API_Interface {
 			case 'changes':
 			case 'translation':
 			case 'release_asset':
+			case 'assets':
 			case 'download_link':
 				break;
 			case 'tags':
@@ -356,7 +357,7 @@ class Bitbucket_API extends API implements API_Interface {
 	protected function parse_asset_dir_response( $response ) {
 		$assets = [];
 
-		if ( isset( $response->message ) || isset( $response->error ) ) {
+		if ( isset( $response->message ) || isset( $response->error ) || is_wp_error( $response ) ) {
 			return $response;
 		}
 
