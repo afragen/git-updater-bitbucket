@@ -84,7 +84,7 @@ class Bitbucket_API extends API implements API_Interface {
 	 * @return bool
 	 */
 	public function get_remote_tag() {
-		return $this->get_remote_api_tag( '/2.0/repositories/:owner/:repo/refs/tags' );
+		return $this->get_remote_api_tag( 'bitbucket', '/2.0/repositories/:owner/:repo/refs/tags' );
 	}
 
 	/**
@@ -115,7 +115,7 @@ class Bitbucket_API extends API implements API_Interface {
 	 * @return bool
 	 */
 	public function get_repo_meta() {
-		return $this->get_remote_api_repo_meta( '/2.0/repositories/:owner/:repo' );
+		return $this->get_remote_api_repo_meta( 'bitbucket', '/2.0/repositories/:owner/:repo' );
 	}
 
 	/**
@@ -143,6 +143,15 @@ class Bitbucket_API extends API implements API_Interface {
 	 */
 	public function get_repo_assets() {
 		return $this->get_remote_api_assets( 'bitbucket', '/2.0/repositories/:owner/:repo/src/:branch/:path' );
+	}
+
+	/**
+	 * Return list of files at repo root.
+	 *
+	 * @return array
+	 */
+	public function get_repo_contents() {
+		return $this->get_remote_api_contents( 'bitbucket', '/2.0/repositories/:owner/:repo/src' );
 	}
 
 	/**
@@ -345,6 +354,31 @@ class Bitbucket_API extends API implements API_Interface {
 		}
 
 		return $branches;
+	}
+
+	/**
+	 * Parse remote root files/dirs.
+	 *
+	 * @param \stdClass|array $response Response from API call.
+	 *
+	 * @return array
+	 */
+	protected function parse_contents_response( $response ) {
+		$files = [];
+		$dirs  = [];
+		foreach ( $response->values as $content ) {
+			if ( 'commit_file' === $content->type ) {
+				$files[] = $content->path;
+			}
+			if ( 'commit_directory' === $content->type ) {
+				$dirs[] = $content->path;
+			}
+		}
+
+		return [
+			'files' => $files,
+			'dirs'  => $dirs,
+		];
 	}
 
 	/**
