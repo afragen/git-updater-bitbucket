@@ -1,6 +1,10 @@
 [unreleased]
 
-#### 2.4.0 / 2023-12-30
+#### 2.4.1 / 2025-01-02
+* update `Bitbucket_Server_API`
+* update `Bitbucket_API::parse_asset_dir_response`
+
+#### 2.4.0 / 2024-12-30
 * update for checking contents, assets, changes, and readmes
 
 #### 2.3.2 / 2024-12-26
