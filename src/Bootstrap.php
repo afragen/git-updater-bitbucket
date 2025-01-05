@@ -255,6 +255,7 @@ class Bootstrap {
 			$credentials['isset']      = true;
 			$credentials['token']      = isset( $token ) ? $token : null;
 			$credentials['enterprise'] = ! $bitbucket_org;
+			$credentials['slug']       = $slug;
 		}
 
 		return $credentials;
@@ -272,6 +273,7 @@ class Bootstrap {
 		if ( 'bitbucket' === $credentials['type'] ) {
 			// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
 			$headers['headers']['Authorization'] = 'Basic ' . base64_encode( $credentials['token'] );
+			$headers['headers']['bitbucket']     = $credentials['slug'];
 		}
 
 		return $headers;
