@@ -87,19 +87,20 @@ class BootstrapTest extends WP_UnitTestCase {
 			'token'         => null,
 			'type'          => null,
 			'enterprise'    => null,
+			'slug'          => null,
 		];
 		$args = [
 			'type'          => 'bitbucket',
 			'headers'       => ['host' => 'bitbucket.org'],
 			'options'       => ['bitbucket_access_token' => 'xxxx'],
-			'slug'          => '',
+			'slug'          => 'my-slug',
 			'object'        => new \stdClass,
 		];
 		$args_enterprise = [
 			'type'          => 'bitbucket',
 			'headers'       => ['host' => 'mybitbucket.org'],
 			'options'       => ['bbserver_access_token' => 'yyyy'],
-			'slug'          => '',
+			'slug'          => 'my-slug',
 			'object'        => new \stdClass,
 		];
 
@@ -109,6 +110,7 @@ class BootstrapTest extends WP_UnitTestCase {
 			'isset'         => true,
 			'token'         => 'xxxx',
 			'enterprise'    => false,
+			'slug'          => 'my-slug',
 		];
 		$credentials_expected_enterprise =[
 			'api.wordpress' => false,
@@ -116,6 +118,7 @@ class BootstrapTest extends WP_UnitTestCase {
 			'isset'         => true,
 			'token'         => 'yyyy',
 			'enterprise'    => true,
+			'slug'          => 'my-slug',
 		];
 
 		$actual            = (new Bootstrap())->set_credentials($credentials, $args);
