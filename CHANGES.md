@@ -1,4 +1,5 @@
 [unreleased]
+* add `added` meta data
 
 #### 2.4.3 / 2025-0221
 * update workflows

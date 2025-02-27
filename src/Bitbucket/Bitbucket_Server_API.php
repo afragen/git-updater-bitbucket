@@ -248,7 +248,8 @@ class Bitbucket_Server_API extends Bitbucket_API {
 			$response,
 			function ( $e ) use ( &$arr ) {
 				$arr['private']      = ! $e->public;
-				$arr['last_updated'] = null;
+				$arr['last_updated'] = '';
+				$arr['added']        = '';
 				$arr['watchers']     = 0;
 				$arr['forks']        = 0;
 				$arr['open_issues']  = 0;
