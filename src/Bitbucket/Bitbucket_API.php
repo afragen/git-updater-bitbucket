@@ -172,6 +172,10 @@ class Bitbucket_API extends API implements API_Interface {
 		if ( $this->use_release_asset( $branch_switch ) ) {
 			$release_asset = $this->get_release_asset();
 
+			if ( ! is_object( $release_asset ) ) {
+				return $release_asset;
+			}
+
 			if ( empty( $this->response['release_asset_redirect'] ) ) {
 				$redirect = $this->get_release_asset_redirect( $release_asset, true );
 				$this->set_repo_cache( 'release_asset_redirect', $redirect );
@@ -368,10 +372,10 @@ class Bitbucket_API extends API implements API_Interface {
 		$files = [];
 		$dirs  = [];
 		foreach ( $response->values as $content ) {
-			if ( 'commit_file' === $content->type ) {
+			if ( property_exists( $content, 'type' ) && 'commit_file' === $content->type ) {
 				$files[] = $content->path;
 			}
-			if ( 'commit_directory' === $content->type ) {
+			if ( property_exists( $content, 'type' ) && 'commit_directory' === $content->type ) {
 				$dirs[] = $content->path;
 			}
 		}

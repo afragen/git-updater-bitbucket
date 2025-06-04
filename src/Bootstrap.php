@@ -393,7 +393,7 @@ class Bootstrap {
 	 * @return string|null
 	 */
 	public function parse_release_asset( $response, $git, $request, $obj ) {
-		if ( 'bitbucket' === $git ) {
+		if ( 'bitbucket' === $git && is_object( $response ) ) {
 			do {
 				$assets = isset( $response->values ) ? $response->values : [];
 				foreach ( $assets as $asset ) {
