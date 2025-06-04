@@ -1,4 +1,6 @@
 [unreleased]
+* add error checking to `parse_contents_response()`
+* Bitbucket no longer allows uploading/downloading assets on free accounts
 
 #### 2.4.4 / 2025-02-27
 * add `added` meta data

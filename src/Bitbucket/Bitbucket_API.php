@@ -368,10 +368,10 @@ class Bitbucket_API extends API implements API_Interface {
 		$files = [];
 		$dirs  = [];
 		foreach ( $response->values as $content ) {
-			if ( 'commit_file' === $content->type ) {
+			if ( property_exists( $content, 'type' ) && 'commit_file' === $content->type ) {
 				$files[] = $content->path;
 			}
-			if ( 'commit_directory' === $content->type ) {
+			if ( property_exists( $content, 'type' ) && 'commit_directory' === $content->type ) {
 				$dirs[] = $content->path;
 			}
 		}
