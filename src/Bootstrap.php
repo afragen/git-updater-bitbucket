@@ -155,7 +155,7 @@ class Bootstrap {
 	/**
 	 * Add API specific repo data.
 	 *
-	 * @param array     $arr  Array of repo API data.
+	 * @param array    $arr  Array of repo API data.
 	 * @param stdClass $repo Repository object.
 	 *
 	 * @return array

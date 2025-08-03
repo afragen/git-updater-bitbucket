@@ -422,16 +422,19 @@ class Bitbucket_API extends API implements API_Interface {
 	 * @return array
 	 */
 	protected function parse_tags( $response, $repo_type ) {
-		$tags     = [];
-		$rollback = [];
+		$tags = [];
 
 		foreach ( (array) $response as $tag ) {
-			$download_base    = "{$repo_type['base_download']}/{$this->type->owner}/{$this->type->owner}/get/";
-			$tags[]           = $tag;
-			$rollback[ $tag ] = $download_base . $tag . '.zip';
+			$download_base = "{$repo_type['base_download']}/{$this->type->owner}/{$this->type->owner}/get/";
+
+			// Ignore leading 'v' and skip anything with dash or words.
+			if ( ! preg_match( '/[^v]+[-a-z]+/', $tag ) ) {
+				$tags[ $tag ] = $download_base . $tag . '.zip';
+			}
+			uksort( $tags, fn ( $a, $b ) => version_compare( ltrim( $b, 'v' ), ltrim( $a, 'v' ) ) );
 		}
 
-		return [ $tags, $rollback ];
+		return $tags;
 	}
 
 	/**

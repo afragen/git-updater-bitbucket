@@ -337,22 +337,25 @@ class Bitbucket_Server_API extends Bitbucket_API {
 	 * Parse tags and create download links.
 	 *
 	 * @param stdClass|array $response  Response from API call.
-	 * @param string          $repo_type plugin|theme.
+	 * @param string         $repo_type plugin|theme.
 	 *
 	 * @return array
 	 */
 	protected function parse_tags( $response, $repo_type ) {
-		$tags     = [];
-		$rollback = [];
+		$tags = [];
 
 		foreach ( (array) $response as $tag ) {
-			$download_base    = "{$repo_type['base_uri']}/projects/{$this->type->owner}/repos/{$this->type->slug}/archive";
-			$download_base    = $this->add_endpoints( $this, $download_base );
-			$tags[]           = $tag;
-			$rollback[ $tag ] = add_query_arg( 'at', $tag, $download_base );
+			$download_base = "{$repo_type['base_uri']}/projects/{$this->type->owner}/repos/{$this->type->slug}/archive";
+			$download_base = $this->add_endpoints( $this, $download_base );
+
+			// Ignore leading 'v' and skip anything with dash or words.
+			if ( ! preg_match( '/[^v]+[-a-z]+/', $tag ) ) {
+				$tags[ $tag ] = add_query_arg( 'at', $tag, $download_base );
+			}
+			uksort( $tags, fn ( $a, $b ) => version_compare( ltrim( $b, 'v' ), ltrim( $a, 'v' ) ) );
 		}
 
-		return [ $tags, $rollback ];
+		return $tags;
 	}
 
 	/**
