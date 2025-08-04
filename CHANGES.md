@@ -1,5 +1,9 @@
 [unreleased]
 
+#### 2.5.0 / 2025-08-04
+* un-escape using `use`
+* update `parse_tags()`
+
 #### 2.4.5 / 2025-06-04
 * add error checking to `parse_contents_response()`
 * Bitbucket no longer allows uploading/downloading assets on free accounts

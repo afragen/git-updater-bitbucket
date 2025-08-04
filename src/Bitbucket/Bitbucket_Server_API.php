@@ -11,6 +11,7 @@
 namespace Fragen\Git_Updater\API;
 
 use Fragen\Singleton;
+use stdClass;
 
 /*
  * Exit if called directly.
@@ -38,7 +39,7 @@ class Bitbucket_Server_API extends Bitbucket_API {
 	/**
 	 * Constructor.
 	 *
-	 * @param \stdClass $type plugin|theme.
+	 * @param stdClass $type plugin|theme.
 	 */
 	public function __construct( $type = null ) {
 		parent::__construct( $type );
@@ -212,7 +213,7 @@ class Bitbucket_Server_API extends Bitbucket_API {
 	 * Combines separate text lines from API response into one string with \n line endings.
 	 * Code relying on raw text can now parse it.
 	 *
-	 * @param string|\stdClass|mixed $response API response data.
+	 * @param string|stdClass|mixed $response API response data.
 	 *
 	 * @return string Combined lines of text returned by API
 	 */
@@ -233,7 +234,7 @@ class Bitbucket_Server_API extends Bitbucket_API {
 	/**
 	 * Parse API response and return array of meta variables.
 	 *
-	 * @param \stdClass|array $response Response from API call.
+	 * @param stdClass|array $response Response from API call.
 	 *
 	 * @return array $arr Array of meta variables.
 	 */
@@ -272,7 +273,7 @@ class Bitbucket_Server_API extends Bitbucket_API {
 	/**
 	 * Parse API response and return object with readme body.
 	 *
-	 * @param string|\stdClass $response API response data.
+	 * @param string|stdClass $response API response data.
 	 *
 	 * @return void
 	 */
@@ -282,7 +283,7 @@ class Bitbucket_Server_API extends Bitbucket_API {
 	/**
 	 * Parse API response and return array of branch data.
 	 *
-	 * @param \stdClass $response API response.
+	 * @param stdClass $response API response.
 	 *
 	 * @return array Array of branch data.
 	 */
@@ -292,7 +293,7 @@ class Bitbucket_Server_API extends Bitbucket_API {
 		}
 		$branches = [];
 		foreach ( $response as $branch ) {
-			if ( ! \property_exists( $branch, 'displayId' ) ) {
+			if ( ! property_exists( $branch, 'displayId' ) ) {
 				continue;
 			}
 			$branches[ $branch->displayId ]['download']    = $this->construct_download_link( $branch->displayId );
@@ -305,9 +306,9 @@ class Bitbucket_Server_API extends Bitbucket_API {
 	/**
 	 * Parse API response call and return only array of tag numbers.
 	 *
-	 * @param \stdClass $response Response from API call.
+	 * @param stdClass $response Response from API call.
 	 *
-	 * @return array|\stdClass Array of tag numbers, object is error.
+	 * @return array|stdClass Array of tag numbers, object is error.
 	 */
 	public function parse_tag_response( $response ) {
 		if ( ! isset( $response->values ) || $this->validate_response( $response ) ) {
@@ -325,7 +326,7 @@ class Bitbucket_Server_API extends Bitbucket_API {
 		);
 
 		if ( ! $arr ) {
-			$arr          = new \stdClass();
+			$arr          = new stdClass();
 			$arr->message = 'No tags found';
 		}
 
@@ -335,23 +336,26 @@ class Bitbucket_Server_API extends Bitbucket_API {
 	/**
 	 * Parse tags and create download links.
 	 *
-	 * @param \stdClass|array $response  Response from API call.
-	 * @param string          $repo_type plugin|theme.
+	 * @param stdClass|array $response  Response from API call.
+	 * @param string         $repo_type plugin|theme.
 	 *
 	 * @return array
 	 */
 	protected function parse_tags( $response, $repo_type ) {
-		$tags     = [];
-		$rollback = [];
+		$tags = [];
 
 		foreach ( (array) $response as $tag ) {
-			$download_base    = "{$repo_type['base_uri']}/projects/{$this->type->owner}/repos/{$this->type->slug}/archive";
-			$download_base    = $this->add_endpoints( $this, $download_base );
-			$tags[]           = $tag;
-			$rollback[ $tag ] = add_query_arg( 'at', $tag, $download_base );
+			$download_base = "{$repo_type['base_uri']}/projects/{$this->type->owner}/repos/{$this->type->slug}/archive";
+			$download_base = $this->add_endpoints( $this, $download_base );
+
+			// Ignore leading 'v' and skip anything with dash or words.
+			if ( ! preg_match( '/[^v]+[-a-z]+/', $tag ) ) {
+				$tags[ $tag ] = add_query_arg( 'at', $tag, $download_base );
+			}
+			uksort( $tags, fn ( $a, $b ) => version_compare( ltrim( $b, 'v' ), ltrim( $a, 'v' ) ) );
 		}
 
-		return [ $tags, $rollback ];
+		return $tags;
 	}
 
 	/**

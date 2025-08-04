@@ -11,6 +11,7 @@
 namespace Fragen\Git_Updater\API;
 
 use Fragen\Singleton;
+use stdClass;
 
 /*
  * Exit if called directly.
@@ -32,7 +33,7 @@ class Bitbucket_API extends API implements API_Interface {
 	 *
 	 * @access public
 	 *
-	 * @param null|\stdClass $type plugin|theme.
+	 * @param null|stdClass $type plugin|theme.
 	 */
 	public function __construct( $type = null ) {
 		parent::__construct();
@@ -271,9 +272,9 @@ class Bitbucket_API extends API implements API_Interface {
 	/**
 	 * Parse API response call and return only array of tag numbers.
 	 *
-	 * @param \stdClass $response Response from API call.
+	 * @param stdClass $response Response from API call.
 	 *
-	 * @return array|\stdClass Array of tag numbers, object is error.
+	 * @return array|stdClass Array of tag numbers, object is error.
 	 */
 	public function parse_tag_response( $response ) {
 		if ( ! isset( $response->values ) || $this->validate_response( $response ) ) {
@@ -291,7 +292,7 @@ class Bitbucket_API extends API implements API_Interface {
 		);
 
 		if ( ! $arr ) {
-			$arr          = new \stdClass();
+			$arr          = new stdClass();
 			$arr->message = 'No tags found';
 		}
 
@@ -301,7 +302,7 @@ class Bitbucket_API extends API implements API_Interface {
 	/**
 	 * Parse API response and return array of meta variables.
 	 *
-	 * @param \stdClass|array $response Response from API call.
+	 * @param stdClass|array $response Response from API call.
 	 *
 	 * @return array $arr Array of meta variables.
 	 */
@@ -330,9 +331,9 @@ class Bitbucket_API extends API implements API_Interface {
 	/**
 	 * Parse API response and return array with changelog in base64.
 	 *
-	 * @param \stdClass|array $response Response from API call.
+	 * @param stdClass|array $response Response from API call.
 	 *
-	 * @return void|array|\stdClass $arr Array of changes in base64, object if error.
+	 * @return void|array|stdClass $arr Array of changes in base64, object if error.
 	 */
 	public function parse_changelog_response( $response ) {
 	}
@@ -340,7 +341,7 @@ class Bitbucket_API extends API implements API_Interface {
 	/**
 	 * Parse API response and return array of branch data.
 	 *
-	 * @param \stdClass $response API response.
+	 * @param stdClass $response API response.
 	 *
 	 * @return array Array of branch data.
 	 */
@@ -364,7 +365,7 @@ class Bitbucket_API extends API implements API_Interface {
 	/**
 	 * Parse remote root files/dirs.
 	 *
-	 * @param \stdClass|array $response Response from API call.
+	 * @param stdClass|array $response Response from API call.
 	 *
 	 * @return array
 	 */
@@ -389,9 +390,9 @@ class Bitbucket_API extends API implements API_Interface {
 	/**
 	 * Parse remote assets directory.
 	 *
-	 * @param \stdClass|array $response Response from API call.
+	 * @param stdClass|array $response Response from API call.
 	 *
-	 * @return \stdClass|array
+	 * @return stdClass|array
 	 */
 	protected function parse_asset_dir_response( $response ) {
 		$assets = [];
@@ -415,22 +416,25 @@ class Bitbucket_API extends API implements API_Interface {
 	/**
 	 * Parse tags and create download links.
 	 *
-	 * @param \stdClass|array $response  Response from API call.
-	 * @param string          $repo_type Repo type.
+	 * @param stdClass|array $response  Response from API call.
+	 * @param string         $repo_type Repo type.
 	 *
 	 * @return array
 	 */
 	protected function parse_tags( $response, $repo_type ) {
-		$tags     = [];
-		$rollback = [];
+		$tags = [];
 
 		foreach ( (array) $response as $tag ) {
-			$download_base    = "{$repo_type['base_download']}/{$this->type->owner}/{$this->type->owner}/get/";
-			$tags[]           = $tag;
-			$rollback[ $tag ] = $download_base . $tag . '.zip';
+			$download_base = "{$repo_type['base_download']}/{$this->type->owner}/{$this->type->owner}/get/";
+
+			// Ignore leading 'v' and skip anything with dash or words.
+			if ( ! preg_match( '/[^v]+[-a-z]+/', $tag ) ) {
+				$tags[ $tag ] = $download_base . $tag . '.zip';
+			}
+			uksort( $tags, fn ( $a, $b ) => version_compare( ltrim( $b, 'v' ), ltrim( $a, 'v' ) ) );
 		}
 
-		return [ $tags, $rollback ];
+		return $tags;
 	}
 
 	/**
