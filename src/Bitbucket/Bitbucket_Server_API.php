@@ -248,7 +248,7 @@ class Bitbucket_Server_API extends Bitbucket_API {
 		array_filter(
 			$response,
 			function ( $e ) use ( &$arr ) {
-				$arr['private']      = ! $e->public;
+				$arr['private']      = isset( $e->public ) ? ! $e->public : false;
 				$arr['last_updated'] = '';
 				$arr['added']        = '';
 				$arr['watchers']     = 0;

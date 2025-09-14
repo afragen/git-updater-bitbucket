@@ -316,9 +316,9 @@ class Bitbucket_API extends API implements API_Interface {
 		array_filter(
 			$response,
 			function ( $e ) use ( &$arr ) {
-				$arr['private']      = $e->is_private;
-				$arr['last_updated'] = $e->updated_on;
-				$arr['added']        = $e->created_on;
+				$arr['private']      = $e->is_private ?? false;
+				$arr['last_updated'] = $e->updated_on ?? '';
+				$arr['added']        = $e->created_on ?? '';
 				$arr['watchers']     = 0;
 				$arr['forks']        = 0;
 				$arr['open_issues']  = 0;

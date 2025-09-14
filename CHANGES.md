@@ -1,4 +1,5 @@
 [unreleased]
+* harden `parse_meta_response()`
 
 #### 2.5.0 / 2025-08-04
 * un-escape using `use`
