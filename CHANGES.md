@@ -1,5 +1,8 @@
 [unreleased]
 
+#### 2.5.2 / 2025-09-27
+* add some early returns
+
 #### 2.5.1 / 2025-09-22
 * harden `parse_meta_response()`
 

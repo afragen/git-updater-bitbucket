@@ -13,6 +13,7 @@ namespace Fragen\Git_Updater\Bitbucket;
 use Fragen\Git_Updater\API\Bitbucket_API;
 use Fragen\Git_Updater\API\Bitbucket_Server_API;
 use stdClass;
+use WP_Error;
 
 /*
  * Exit if called directly.
@@ -244,6 +245,9 @@ class Bootstrap {
 		} else {
 			return $credentials;
 		}
+		if ( ! isset( $headers['host'] ) ) {
+			return $credentials;
+		}
 		if ( 'bitbucket' === $type || $object instanceof Bitbucket_API || $object instanceof Bitbucket_Server_API ) {
 			$bitbucket_org   = in_array( $headers['host'], [ 'bitbucket.org', 'api.bitbucket.org' ], true );
 			$bitbucket_token = ! empty( $options['bitbucket_access_token'] ) ? $options['bitbucket_access_token'] : null;
@@ -390,10 +394,13 @@ class Bootstrap {
 	 * @param string   $git      Name of git host.
 	 * @param string   $request  Schema of API request.
 	 * @param stdClass $obj      Current class object.
-	 *
-	 * @return string|null
+	 * @return string|null|WP_Error
 	 */
 	public function parse_release_asset( $response, $git, $request, $obj ) {
+		if ( 'bitbucket' === $git && ! is_object( $response ) ) {
+			return new WP_Error( 'no_release_asset', $response );
+		}
+
 		if ( 'bitbucket' === $git && is_object( $response ) ) {
 			do {
 				$assets = isset( $response->values ) ? $response->values : [];
