@@ -352,8 +352,8 @@ class Bitbucket_Server_API extends Bitbucket_API {
 			if ( ! preg_match( '/[^v]+[-a-z]+/', $tag ) ) {
 				$tags[ $tag ] = add_query_arg( 'at', $tag, $download_base );
 			}
-			uksort( $tags, fn ( $a, $b ) => version_compare( ltrim( $b, 'v' ), ltrim( $a, 'v' ) ) );
 		}
+		uksort( $tags, fn ( $a, $b ) => version_compare( ltrim( $b, 'v' ), ltrim( $a, 'v' ) ) );
 
 		return $tags;
 	}
