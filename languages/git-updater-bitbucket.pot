@@ -1,94 +1,98 @@
-# Copyright (C) 2023 Andy Fragen
+# Copyright (C) 2025 Andy Fragen
 # This file is distributed under the MIT.
 msgid ""
 msgstr ""
-"Project-Id-Version: Git Updater - Bitbucket 2.0.2\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/git-updater-bitbucket\n"
+"Project-Id-Version: Git Updater - Bitbucket 2.5.2\n"
+"Report-Msgid-Bugs-To: https://github.com/afragen/git-updater-bitbucket/issues\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-02-06T02:46:18+00:00\n"
+"POT-Creation-Date: 2025-09-27T20:29:40+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.7.1\n"
+"X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: git-updater-bitbucket\n"
 
 #. Plugin Name of the plugin
+#: git-updater-bitbucket.php
 msgid "Git Updater - Bitbucket"
 msgstr ""
 
 #. Plugin URI of the plugin
+#: git-updater-bitbucket.php
 msgid "https://github.com/afragen/git-updater-bitbucket"
 msgstr ""
 
 #. Description of the plugin
+#: git-updater-bitbucket.php
 msgid "Add Bitbucket and Bitbucket Server repositories to the Git Updater plugin."
 msgstr ""
 
 #. Author of the plugin
+#: git-updater-bitbucket.php
 msgid "Andy Fragen"
 msgstr ""
 
-#: src/Bitbucket/Bitbucket_API.php:371
-#: src/Bitbucket/Bitbucket_API.php:403
+#: src/Bitbucket/Bitbucket_API.php:450
+#: src/Bitbucket/Bitbucket_API.php:482
 msgid "Bitbucket Pseudo-Token"
 msgstr ""
 
-#: src/Bitbucket/Bitbucket_API.php:378
-#: src/Bitbucket/Bitbucket_API.php:481
+#: src/Bitbucket/Bitbucket_API.php:457
+#: src/Bitbucket/Bitbucket_API.php:560
 msgid "Bitbucket Username"
 msgstr ""
 
-#: src/Bitbucket/Bitbucket_API.php:390
-#: src/Bitbucket/Bitbucket_API.php:488
+#: src/Bitbucket/Bitbucket_API.php:469
+#: src/Bitbucket/Bitbucket_API.php:567
 msgid "Bitbucket Password"
 msgstr ""
 
-#: src/Bitbucket/Bitbucket_API.php:421
+#: src/Bitbucket/Bitbucket_API.php:500
 msgid "Bitbucket Private Repositories"
 msgstr ""
 
-#: src/Bitbucket/Bitbucket_API.php:452
+#: src/Bitbucket/Bitbucket_API.php:531
 msgid "Bitbucket"
 msgstr ""
 
-#: src/Bitbucket/Bitbucket_API.php:461
+#: src/Bitbucket/Bitbucket_API.php:540
 msgid "Enter `username:password` if private repository. Don't forget the colon `:`."
 msgstr ""
 
-#: src/Bitbucket/Bitbucket_API.php:468
+#: src/Bitbucket/Bitbucket_API.php:547
 msgid "Enter your personal Bitbucket username and password. It will automatically be converted to a pseudo-token."
 msgstr ""
 
-#: src/Bitbucket/Bitbucket_API.php:504
+#: src/Bitbucket/Bitbucket_API.php:583
 msgid "Enter Bitbucket username."
 msgstr ""
 
-#: src/Bitbucket/Bitbucket_API.php:519
+#: src/Bitbucket/Bitbucket_API.php:598
 msgid "Enter Bitbucket password."
 msgstr ""
 
-#: src/Bitbucket/Bitbucket_Server_API.php:366
+#: src/Bitbucket/Bitbucket_Server_API.php:371
 msgid "Bitbucket Server Private Settings"
 msgstr ""
 
-#: src/Bitbucket/Bitbucket_Server_API.php:373
+#: src/Bitbucket/Bitbucket_Server_API.php:378
 msgid "Bitbucket Server Username"
 msgstr ""
 
-#: src/Bitbucket/Bitbucket_Server_API.php:385
+#: src/Bitbucket/Bitbucket_Server_API.php:390
 msgid "Bitbucket Server Password"
 msgstr ""
 
-#: src/Bitbucket/Bitbucket_Server_API.php:398
+#: src/Bitbucket/Bitbucket_Server_API.php:403
 msgid "Bitbucket Server Pseudo-Token"
 msgstr ""
 
-#: src/Bitbucket/Bitbucket_Server_API.php:416
+#: src/Bitbucket/Bitbucket_Server_API.php:421
 msgid "Bitbucket Server Private Repositories"
 msgstr ""
 
-#: src/Bitbucket/Bitbucket_Server_API.php:447
+#: src/Bitbucket/Bitbucket_Server_API.php:452
 msgid "Bitbucket Server"
 msgstr ""
