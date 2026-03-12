@@ -1,5 +1,6 @@
 [unreleased]
 * move sort outside of loop
+* move download base outside of loop
 
 #### 2.5.2 / 2025-09-27
 * add some early returns

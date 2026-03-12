@@ -343,11 +343,10 @@ class Bitbucket_Server_API extends Bitbucket_API {
 	 */
 	protected function parse_tags( $response, $repo_type ) {
 		$tags = [];
+		$download_base = "{$repo_type['base_uri']}/projects/{$this->type->owner}/repos/{$this->type->slug}/archive";
+		$download_base = $this->add_endpoints( $this, $download_base );
 
 		foreach ( (array) $response as $tag ) {
-			$download_base = "{$repo_type['base_uri']}/projects/{$this->type->owner}/repos/{$this->type->slug}/archive";
-			$download_base = $this->add_endpoints( $this, $download_base );
-
 			// Ignore leading 'v' and skip anything with dash or words.
 			if ( ! preg_match( '/[^v]+[-a-z]+/', $tag ) ) {
 				$tags[ $tag ] = add_query_arg( 'at', $tag, $download_base );

@@ -423,10 +423,9 @@ class Bitbucket_API extends API implements API_Interface {
 	 */
 	protected function parse_tags( $response, $repo_type ) {
 		$tags = [];
+		$download_base = "{$repo_type['base_download']}/{$this->type->owner}/{$this->type->owner}/get/";
 
 		foreach ( (array) $response as $tag ) {
-			$download_base = "{$repo_type['base_download']}/{$this->type->owner}/{$this->type->owner}/get/";
-
 			// Ignore leading 'v' and skip anything with dash or words.
 			if ( ! preg_match( '/[^v]+[-a-z]+/', $tag ) ) {
 				$tags[ $tag ] = $download_base . $tag . '.zip';
