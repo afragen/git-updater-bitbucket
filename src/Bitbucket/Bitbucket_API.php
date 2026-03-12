@@ -454,7 +454,7 @@ class Bitbucket_API extends API implements API_Interface {
 
 		add_settings_field(
 			'bitbucket_username',
-			esc_html__( 'Bitbucket Username', 'git-updater-bitbucket' ),
+			esc_html__( 'Atlassian Account Email', 'git-updater-bitbucket' ),
 			[ Singleton::get_instance( 'Settings', $this ), 'token_callback_text' ],
 			'git_updater_bitbucket_install_settings',
 			'bitbucket_token',
@@ -466,7 +466,7 @@ class Bitbucket_API extends API implements API_Interface {
 
 		add_settings_field(
 			'bitbucket_password',
-			esc_html__( 'Bitbucket Password', 'git-updater-bitbucket' ),
+			esc_html__( 'Bitbucket API token', 'git-updater-bitbucket' ),
 			[ Singleton::get_instance( 'Settings', $this ), 'token_callback_text' ],
 			'git_updater_bitbucket_install_settings',
 			'bitbucket_token',
@@ -537,14 +537,14 @@ class Bitbucket_API extends API implements API_Interface {
 	 * Print the Bitbucket repo Settings text.
 	 */
 	public function print_section_bitbucket_info() {
-		esc_html_e( 'Enter `username:password` if private repository. Don\'t forget the colon `:`.', 'git-updater-bitbucket' );
+		esc_html_e( 'Enter `Atlassian account email:API token` if private repository. Don\'t forget the colon `:`.', 'git-updater-bitbucket' );
 	}
 
 	/**
 	 * Print the Bitbucket user/pass Settings text.
 	 */
 	public function print_section_bitbucket_token() {
-		esc_html_e( 'Enter your personal Bitbucket username and password. It will automatically be converted to a pseudo-token.', 'git-updater-bitbucket' );
+		esc_html_e( 'Enter your personal Atlassian account email and API token with MANAGE and READ scopes. It will automatically be converted to a pseudo-token.', 'git-updater-bitbucket' );
 		$icon = plugin_dir_url( dirname( __DIR__ ) ) . 'assets/bitbucket-logo.svg';
 		printf( '<img class="git-oauth-icon" src="%s" alt="Bitbucket logo" />', esc_attr( $icon ) );
 	}
@@ -557,14 +557,14 @@ class Bitbucket_API extends API implements API_Interface {
 	public function add_install_settings_fields( $type ) {
 		add_settings_field(
 			'bitbucket_username',
-			esc_html__( 'Bitbucket Username', 'git-updater-bitbucket' ),
+			esc_html__( 'Atlassian account email', 'git-updater-bitbucket' ),
 			[ $this, 'bitbucket_username' ],
 			'git_updater_install_' . $type,
 			$type
 		);
 		add_settings_field(
 			'bitbucket_password',
-			esc_html__( 'Bitbucket Password', 'git-updater-bitbucket' ),
+			esc_html__( 'Bitbucket API Token with scopes', 'git-updater-bitbucket' ),
 			[ $this, 'bitbucket_password' ],
 			'git_updater_install_' . $type,
 			$type
@@ -580,7 +580,7 @@ class Bitbucket_API extends API implements API_Interface {
 			<input class="bitbucket_setting" type="text" style="width:50%;" id="bitbucket_username" name="bitbucket_username" value="">
 			<br>
 			<span class="description">
-				<?php esc_html_e( 'Enter Bitbucket username.', 'git-updater-bitbucket' ); ?>
+				<?php esc_html_e( 'Enter Atlassian account email.', 'git-updater-bitbucket' ); ?>
 			</span>
 		</label>
 		<?php
@@ -595,7 +595,7 @@ class Bitbucket_API extends API implements API_Interface {
 			<input class="bitbucket_setting" type="password" style="width:50%;" id="bitbucket_password" name="bitbucket_password" value="" autocomplete="new-password">
 			<br>
 			<span class="description">
-				<?php esc_html_e( 'Enter Bitbucket password.', 'git-updater-bitbucket' ); ?>
+				<?php esc_html_e( 'Enter Bitbucket API token with scopes.', 'git-updater-bitbucket' ); ?>
 			</span>
 		</label>
 		<?php

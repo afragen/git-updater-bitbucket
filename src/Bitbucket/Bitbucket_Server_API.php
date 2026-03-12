@@ -374,7 +374,7 @@ class Bitbucket_Server_API extends Bitbucket_API {
 
 		add_settings_field(
 			'bitbucket_server_username',
-			esc_html__( 'Bitbucket Server Username', 'git-updater-bitbucket' ),
+			esc_html__( 'Atlassian Account Email', 'git-updater-bitbucket' ),
 			[ Singleton::get_instance( 'Settings', $this ), 'token_callback_text' ],
 			'git_updater_bbserver_install_settings',
 			'bitbucket_server_token',
@@ -386,7 +386,7 @@ class Bitbucket_Server_API extends Bitbucket_API {
 
 		add_settings_field(
 			'bitbucket_server_password',
-			esc_html__( 'Bitbucket Server Password', 'git-updater-bitbucket' ),
+			esc_html__( 'Bitbucket Server API Token', 'git-updater-bitbucket' ),
 			[ Singleton::get_instance( 'Settings', $this ), 'token_callback_text' ],
 			'git_updater_bbserver_install_settings',
 			'bitbucket_server_token',
