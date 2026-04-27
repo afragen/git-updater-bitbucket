@@ -342,7 +342,7 @@ class Bitbucket_Server_API extends Bitbucket_API {
 	 * @return array
 	 */
 	protected function parse_tags( $response, $repo_type ) {
-		$tags = [];
+		$tags          = [];
 		$download_base = "{$repo_type['base_uri']}/projects/{$this->type->owner}/repos/{$this->type->slug}/archive";
 		$download_base = $this->add_endpoints( $this, $download_base );
 

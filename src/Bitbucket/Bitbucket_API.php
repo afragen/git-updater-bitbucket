@@ -37,8 +37,7 @@ class Bitbucket_API extends API implements API_Interface {
 	 */
 	public function __construct( $type = null ) {
 		parent::__construct();
-		$this->type     = $type;
-		$this->response = [];
+		$this->type = $type;
 		$this->settings_hook( $this );
 		$this->add_settings_subtab();
 		$this->add_install_fields( $this );
@@ -166,6 +165,8 @@ class Bitbucket_API extends API implements API_Interface {
 		self::$method       = 'download_link';
 		$download_link_base = $this->get_api_url( '/:owner/:repo/get/', true );
 		$endpoint           = '';
+		$cache_key          = $this->get_cache_key( $this->type->slug ?? false );
+		$cache              = get_site_option( $cache_key );
 
 		// Release asset.
 		// Bitbucket seems to require the release asset redirect for updating
@@ -177,17 +178,17 @@ class Bitbucket_API extends API implements API_Interface {
 				return $release_asset;
 			}
 
-			if ( empty( $this->response['release_asset_redirect'] ) ) {
+			if ( empty( $cache['release_asset_redirect'] ) ) {
 				$redirect = $this->get_release_asset_redirect( $release_asset, true );
 				$this->set_repo_cache( 'release_asset_redirect', $redirect );
 			}
 
-			if ( ! empty( $this->response['release_asset_redirect'] ) ) {
+			if ( ! empty( $cache['release_asset_redirect'] ) ) {
 				// For updating.
-				return $this->response['release_asset_redirect'];
+				return $cache['release_asset_redirect'];
 			} else {
 				// For installing.
-				return $this->response['release_asset_download'];
+				return $cache['release_asset_download'];
 			}
 		}
 
@@ -423,7 +424,7 @@ class Bitbucket_API extends API implements API_Interface {
 	 * @return array
 	 */
 	protected function parse_tags( $response, $repo_type ) {
-		$tags = [];
+		$tags          = [];
 		$download_base = "{$repo_type['base_download']}/{$this->type->owner}/{$this->type->owner}/get/";
 
 		foreach ( (array) $response as $tag ) {
