@@ -337,7 +337,7 @@ class Bitbucket_Server_API extends Bitbucket_API {
 	 * Parse tags and create download links.
 	 *
 	 * @param stdClass|array $response  Response from API call.
-	 * @param string         $repo_type plugin|theme.
+	 * @param array          $repo_type plugin|theme.
 	 *
 	 * @return array
 	 */
