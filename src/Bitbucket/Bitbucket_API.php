@@ -165,8 +165,7 @@ class Bitbucket_API extends API implements API_Interface {
 		self::$method       = 'download_link';
 		$download_link_base = $this->get_api_url( '/:owner/:repo/get/', true );
 		$endpoint           = '';
-		$cache_key          = $this->get_cache_key( $this->type->slug ?? false );
-		$cache              = get_site_option( $cache_key );
+		$cache              = $this->get_repo_cache( $this->type->slug ?? false, false );
 
 		// Release asset.
 		// Bitbucket seems to require the release asset redirect for updating
