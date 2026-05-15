@@ -60,7 +60,7 @@ class Bitbucket_Server_API extends Bitbucket_API {
 	/**
 	 * Read the repository meta from API
 	 *
-	 * @return bool
+	 * @return bool|null
 	 */
 	public function get_repo_meta() {
 		return $this->get_remote_api_repo_meta( 'bbserver', '/1.0/projects/:owner/repos/:repo' );
@@ -71,7 +71,7 @@ class Bitbucket_Server_API extends Bitbucket_API {
 	 *
 	 * @access public
 	 *
-	 * @return bool
+	 * @return bool|null
 	 */
 	public function get_remote_tag() {
 		return $this->get_remote_api_tag( 'bbserver', '/1.0/projects/:owner/repos/:repo/tags' );
@@ -80,7 +80,7 @@ class Bitbucket_Server_API extends Bitbucket_API {
 	/**
 	 * Read and parse remote readme.txt.
 	 *
-	 * @return bool
+	 * @return bool|null
 	 */
 	public function get_remote_readme() {
 		return $this->get_remote_api_readme( 'bbserver', '/1.0/projects/:owner/repos/:repo/raw/:readme' );
@@ -91,7 +91,7 @@ class Bitbucket_Server_API extends Bitbucket_API {
 	 *
 	 * @param string $changes Changelog filename - (deprecated).
 	 *
-	 * @return bool
+	 * @return bool|null
 	 */
 	public function get_remote_changes( $changes ) {
 		return $this->get_remote_api_changes( 'bbserver', $changes, '/1.0/projects/:owner/repos/:repo/raw/:changelog' );
@@ -100,7 +100,7 @@ class Bitbucket_Server_API extends Bitbucket_API {
 	/**
 	 * Create array of branches and download links as array.
 	 *
-	 * @return bool
+	 * @return bool|null
 	 */
 	public function get_remote_branches() {
 		return $this->get_remote_api_branches( 'bbserver', '/1.0/projects/:owner/repos/:repo/branches' );

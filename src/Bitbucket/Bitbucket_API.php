@@ -41,26 +41,7 @@ class Bitbucket_API extends API implements API_Interface {
 		$this->settings_hook( $this );
 		$this->add_settings_subtab();
 		$this->add_install_fields( $this );
-		$this->set_credentials_error_message();
 		$this->convert_user_pass_to_token();
-	}
-
-	/**
-	 * Set notice if credentials not set.
-	 */
-	protected function set_credentials_error_message() {
-		$running_servers     = Singleton::get_instance( 'Base', $this )->get_running_git_servers();
-		$bitbucket_token_set = in_array( 'bitbucket', $running_servers, true ) && ! empty( static::$options['bitbucket_access_token'] );
-		$bbserver_token_set  = in_array( 'bbserver', $running_servers, true ) && ! empty( static::$options['bbserver_access_token'] );
-
-		if ( ! ( $bitbucket_token_set || $bbserver_token_set ) ) {
-			Singleton::get_instance( 'Messages', $this )->create_error_message( 'bitbucket' );
-
-			static::$error_code['bitbucket'] = [
-				'git'  => 'bitbucket',
-				'code' => 401,
-			];
-		}
 	}
 
 	/**
@@ -81,7 +62,7 @@ class Bitbucket_API extends API implements API_Interface {
 	 *
 	 * @access public
 	 *
-	 * @return bool
+	 * @return bool|null
 	 */
 	public function get_remote_tag() {
 		return $this->get_remote_api_tag( 'bitbucket', '/2.0/repositories/:owner/:repo/refs/tags' );
@@ -94,7 +75,7 @@ class Bitbucket_API extends API implements API_Interface {
 
 	 * @param null $changes The changelog filename - deprecated.
 	 *
-	 * @return bool
+	 * @return bool|null
 	 */
 	public function get_remote_changes( $changes ) {
 		return $this->get_remote_api_changes( 'bitbucket', $changes, '/2.0/repositories/:owner/:repo/src/:branch/:changelog' );
@@ -103,7 +84,7 @@ class Bitbucket_API extends API implements API_Interface {
 	/**
 	 * Read and parse remote readme.txt.
 	 *
-	 * @return bool
+	 * @return bool|null
 	 */
 	public function get_remote_readme() {
 		return $this->get_remote_api_readme( 'bitbucket', '/2.0/repositories/:owner/:repo/src/:branch/:readme' );
@@ -112,7 +93,7 @@ class Bitbucket_API extends API implements API_Interface {
 	/**
 	 * Read the repository meta from API
 	 *
-	 * @return bool
+	 * @return bool|null
 	 */
 	public function get_repo_meta() {
 		return $this->get_remote_api_repo_meta( 'bitbucket', '/2.0/repositories/:owner/:repo' );
@@ -121,7 +102,7 @@ class Bitbucket_API extends API implements API_Interface {
 	/**
 	 * Create array of branches and download links as array.
 	 *
-	 * @return bool
+	 * @return bool|null
 	 */
 	public function get_remote_branches() {
 		return $this->get_remote_api_branches( 'bitbucket', '/2.0/repositories/:owner/:repo/refs/branches' );
@@ -139,7 +120,7 @@ class Bitbucket_API extends API implements API_Interface {
 	/**
 	 * Return list of repository assets.
 	 *
-	 * @return array
+	 * @return bool|null
 	 */
 	public function get_repo_assets() {
 		return $this->get_remote_api_assets( 'bitbucket', '/2.0/repositories/:owner/:repo/src/:branch/:path' );
@@ -148,7 +129,7 @@ class Bitbucket_API extends API implements API_Interface {
 	/**
 	 * Return list of files at repo root.
 	 *
-	 * @return array
+	 * @return bool|null
 	 */
 	public function get_repo_contents() {
 		return $this->get_remote_api_contents( 'bitbucket', '/2.0/repositories/:owner/:repo/src' );
