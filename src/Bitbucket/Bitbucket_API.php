@@ -472,6 +472,15 @@ class Bitbucket_API extends API implements API_Interface {
 			]
 		);
 
+		add_settings_field(
+			'bitbucket_oauth_connect',
+			esc_html__( 'Bitbucket OAuth', 'git-updater-bitbucket' ),
+			[ Singleton::get_instance( 'OAuth\OAuth_Connect', $this ), 'render_connect_field' ],
+			'git_updater_bitbucket_install_settings',
+			'bitbucket_token',
+			[ 'provider' => 'bitbucket' ]
+		);
+
 		/*
 		 * Show section for private Bitbucket repositories.
 		 */
