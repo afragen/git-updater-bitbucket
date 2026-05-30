@@ -467,7 +467,7 @@ class Bitbucket_API extends API implements API_Interface {
 			[
 				'id'          => 'bitbucket_access_token',
 				'token'       => true,
-				'placeholder' => true,
+				'placeholder' => 'username:password',
 				'class'       => ! empty( static::$options['bitbucket_access_token'] ) ? '' : 'hidden',
 			]
 		);
@@ -506,7 +506,7 @@ class Bitbucket_API extends API implements API_Interface {
 			Singleton::get_instance( 'Settings', $this ),
 			'token_callback_text',
 		];
-		$setting_field['placeholder']     = true;
+		$setting_field['placeholder']     = 'username:password';
 
 		return $setting_field;
 	}
