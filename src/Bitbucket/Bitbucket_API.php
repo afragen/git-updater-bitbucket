@@ -37,31 +37,11 @@ class Bitbucket_API extends API implements API_Interface {
 	 */
 	public function __construct( $type = null ) {
 		parent::__construct();
-		$this->type     = $type;
-		$this->response = [];
+		$this->type = $type;
 		$this->settings_hook( $this );
 		$this->add_settings_subtab();
 		$this->add_install_fields( $this );
-		$this->set_credentials_error_message();
 		$this->convert_user_pass_to_token();
-	}
-
-	/**
-	 * Set notice if credentials not set.
-	 */
-	protected function set_credentials_error_message() {
-		$running_servers     = Singleton::get_instance( 'Base', $this )->get_running_git_servers();
-		$bitbucket_token_set = in_array( 'bitbucket', $running_servers, true ) && ! empty( static::$options['bitbucket_access_token'] );
-		$bbserver_token_set  = in_array( 'bbserver', $running_servers, true ) && ! empty( static::$options['bbserver_access_token'] );
-
-		if ( ! ( $bitbucket_token_set || $bbserver_token_set ) ) {
-			Singleton::get_instance( 'Messages', $this )->create_error_message( 'bitbucket' );
-
-			static::$error_code['bitbucket'] = [
-				'git'  => 'bitbucket',
-				'code' => 401,
-			];
-		}
 	}
 
 	/**
@@ -82,7 +62,7 @@ class Bitbucket_API extends API implements API_Interface {
 	 *
 	 * @access public
 	 *
-	 * @return bool
+	 * @return bool|null
 	 */
 	public function get_remote_tag() {
 		return $this->get_remote_api_tag( 'bitbucket', '/2.0/repositories/:owner/:repo/refs/tags' );
@@ -95,7 +75,7 @@ class Bitbucket_API extends API implements API_Interface {
 
 	 * @param null $changes The changelog filename - deprecated.
 	 *
-	 * @return bool
+	 * @return bool|null
 	 */
 	public function get_remote_changes( $changes ) {
 		return $this->get_remote_api_changes( 'bitbucket', $changes, '/2.0/repositories/:owner/:repo/src/:branch/:changelog' );
@@ -104,7 +84,7 @@ class Bitbucket_API extends API implements API_Interface {
 	/**
 	 * Read and parse remote readme.txt.
 	 *
-	 * @return bool
+	 * @return bool|null
 	 */
 	public function get_remote_readme() {
 		return $this->get_remote_api_readme( 'bitbucket', '/2.0/repositories/:owner/:repo/src/:branch/:readme' );
@@ -113,7 +93,7 @@ class Bitbucket_API extends API implements API_Interface {
 	/**
 	 * Read the repository meta from API
 	 *
-	 * @return bool
+	 * @return bool|null
 	 */
 	public function get_repo_meta() {
 		return $this->get_remote_api_repo_meta( 'bitbucket', '/2.0/repositories/:owner/:repo' );
@@ -122,7 +102,7 @@ class Bitbucket_API extends API implements API_Interface {
 	/**
 	 * Create array of branches and download links as array.
 	 *
-	 * @return bool
+	 * @return bool|null
 	 */
 	public function get_remote_branches() {
 		return $this->get_remote_api_branches( 'bitbucket', '/2.0/repositories/:owner/:repo/refs/branches' );
@@ -140,7 +120,7 @@ class Bitbucket_API extends API implements API_Interface {
 	/**
 	 * Return list of repository assets.
 	 *
-	 * @return array
+	 * @return bool|null
 	 */
 	public function get_repo_assets() {
 		return $this->get_remote_api_assets( 'bitbucket', '/2.0/repositories/:owner/:repo/src/:branch/:path' );
@@ -149,7 +129,7 @@ class Bitbucket_API extends API implements API_Interface {
 	/**
 	 * Return list of files at repo root.
 	 *
-	 * @return array
+	 * @return bool|null
 	 */
 	public function get_repo_contents() {
 		return $this->get_remote_api_contents( 'bitbucket', '/2.0/repositories/:owner/:repo/src' );
@@ -166,6 +146,7 @@ class Bitbucket_API extends API implements API_Interface {
 		self::$method       = 'download_link';
 		$download_link_base = $this->get_api_url( '/:owner/:repo/get/', true );
 		$endpoint           = '';
+		$cache              = $this->get_repo_cache( $this->type->slug ?? false, false );
 
 		// Release asset.
 		// Bitbucket seems to require the release asset redirect for updating
@@ -177,17 +158,17 @@ class Bitbucket_API extends API implements API_Interface {
 				return $release_asset;
 			}
 
-			if ( empty( $this->response['release_asset_redirect'] ) ) {
+			if ( empty( $cache['release_asset_redirect'] ) ) {
 				$redirect = $this->get_release_asset_redirect( $release_asset, true );
 				$this->set_repo_cache( 'release_asset_redirect', $redirect );
 			}
 
-			if ( ! empty( $this->response['release_asset_redirect'] ) ) {
+			if ( ! empty( $cache['release_asset_redirect'] ) ) {
 				// For updating.
-				return $this->response['release_asset_redirect'];
+				return $cache['release_asset_redirect'];
 			} else {
 				// For installing.
-				return $this->response['release_asset_download'];
+				return $cache['release_asset_download'];
 			}
 		}
 
@@ -373,6 +354,7 @@ class Bitbucket_API extends API implements API_Interface {
 		$files = [];
 		$dirs  = [];
 		foreach ( $response->values as $content ) {
+			$content = (object) $content;
 			if ( property_exists( $content, 'type' ) && 'commit_file' === $content->type ) {
 				$files[] = $content->path;
 			}
@@ -417,22 +399,21 @@ class Bitbucket_API extends API implements API_Interface {
 	 * Parse tags and create download links.
 	 *
 	 * @param stdClass|array $response  Response from API call.
-	 * @param string         $repo_type Repo type.
+	 * @param array          $repo_type Repo type.
 	 *
 	 * @return array
 	 */
 	protected function parse_tags( $response, $repo_type ) {
-		$tags = [];
+		$tags          = [];
+		$download_base = "{$repo_type['base_download']}/{$this->type->owner}/{$this->type->owner}/get/";
 
 		foreach ( (array) $response as $tag ) {
-			$download_base = "{$repo_type['base_download']}/{$this->type->owner}/{$this->type->owner}/get/";
-
 			// Ignore leading 'v' and skip anything with dash or words.
 			if ( ! preg_match( '/[^v]+[-a-z]+/', $tag ) ) {
 				$tags[ $tag ] = $download_base . $tag . '.zip';
 			}
-			uksort( $tags, fn ( $a, $b ) => version_compare( ltrim( $b, 'v' ), ltrim( $a, 'v' ) ) );
 		}
+		uksort( $tags, fn ( $a, $b ) => version_compare( ltrim( $b, 'v' ), ltrim( $a, 'v' ) ) );
 
 		return $tags;
 	}
@@ -454,7 +435,7 @@ class Bitbucket_API extends API implements API_Interface {
 
 		add_settings_field(
 			'bitbucket_username',
-			esc_html__( 'Bitbucket Username', 'git-updater-bitbucket' ),
+			esc_html__( 'Atlassian Account Email', 'git-updater-bitbucket' ),
 			[ Singleton::get_instance( 'Settings', $this ), 'token_callback_text' ],
 			'git_updater_bitbucket_install_settings',
 			'bitbucket_token',
@@ -466,7 +447,7 @@ class Bitbucket_API extends API implements API_Interface {
 
 		add_settings_field(
 			'bitbucket_password',
-			esc_html__( 'Bitbucket Password', 'git-updater-bitbucket' ),
+			esc_html__( 'Bitbucket API token', 'git-updater-bitbucket' ),
 			[ Singleton::get_instance( 'Settings', $this ), 'token_callback_text' ],
 			'git_updater_bitbucket_install_settings',
 			'bitbucket_token',
@@ -537,14 +518,14 @@ class Bitbucket_API extends API implements API_Interface {
 	 * Print the Bitbucket repo Settings text.
 	 */
 	public function print_section_bitbucket_info() {
-		esc_html_e( 'Enter `username:password` if private repository. Don\'t forget the colon `:`.', 'git-updater-bitbucket' );
+		esc_html_e( 'Enter `Atlassian account email:API token` if private repository. Don\'t forget the colon `:`.', 'git-updater-bitbucket' );
 	}
 
 	/**
 	 * Print the Bitbucket user/pass Settings text.
 	 */
 	public function print_section_bitbucket_token() {
-		esc_html_e( 'Enter your personal Bitbucket username and password. It will automatically be converted to a pseudo-token.', 'git-updater-bitbucket' );
+		esc_html_e( 'Enter your personal Atlassian account email and API token with MANAGE and READ scopes. It will automatically be converted to a pseudo-token.', 'git-updater-bitbucket' );
 		$icon = plugin_dir_url( dirname( __DIR__ ) ) . 'assets/bitbucket-logo.svg';
 		printf( '<img class="git-oauth-icon" src="%s" alt="Bitbucket logo" />', esc_attr( $icon ) );
 	}
@@ -557,14 +538,14 @@ class Bitbucket_API extends API implements API_Interface {
 	public function add_install_settings_fields( $type ) {
 		add_settings_field(
 			'bitbucket_username',
-			esc_html__( 'Bitbucket Username', 'git-updater-bitbucket' ),
+			esc_html__( 'Atlassian account email', 'git-updater-bitbucket' ),
 			[ $this, 'bitbucket_username' ],
 			'git_updater_install_' . $type,
 			$type
 		);
 		add_settings_field(
 			'bitbucket_password',
-			esc_html__( 'Bitbucket Password', 'git-updater-bitbucket' ),
+			esc_html__( 'Bitbucket API Token with scopes', 'git-updater-bitbucket' ),
 			[ $this, 'bitbucket_password' ],
 			'git_updater_install_' . $type,
 			$type
@@ -580,7 +561,7 @@ class Bitbucket_API extends API implements API_Interface {
 			<input class="bitbucket_setting" type="text" style="width:50%;" id="bitbucket_username" name="bitbucket_username" value="">
 			<br>
 			<span class="description">
-				<?php esc_html_e( 'Enter Bitbucket username.', 'git-updater-bitbucket' ); ?>
+				<?php esc_html_e( 'Enter Atlassian account email.', 'git-updater-bitbucket' ); ?>
 			</span>
 		</label>
 		<?php
@@ -595,7 +576,7 @@ class Bitbucket_API extends API implements API_Interface {
 			<input class="bitbucket_setting" type="password" style="width:50%;" id="bitbucket_password" name="bitbucket_password" value="" autocomplete="new-password">
 			<br>
 			<span class="description">
-				<?php esc_html_e( 'Enter Bitbucket password.', 'git-updater-bitbucket' ); ?>
+				<?php esc_html_e( 'Enter Bitbucket API token with scopes.', 'git-updater-bitbucket' ); ?>
 			</span>
 		</label>
 		<?php

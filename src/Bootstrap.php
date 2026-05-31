@@ -258,7 +258,7 @@ class Bootstrap {
 
 			$credentials['type']       = 'bitbucket';
 			$credentials['isset']      = true;
-			$credentials['token']      = isset( $token ) ? $token : null;
+			$credentials['token']      = $token ?? null;
 			$credentials['enterprise'] = ! $bitbucket_org;
 			$credentials['slug']       = $slug;
 		}

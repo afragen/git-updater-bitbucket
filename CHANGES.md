@@ -1,5 +1,11 @@
 [unreleased]
 
+#### 2.6.0 / 2026-05-31 🎂
+* move sort outside of loop
+* move download base outside of loop
+* update settings names for Atlassian changes to tokens
+* use local variables
+
 #### 2.5.2 / 2025-09-27
 * add some early returns
 

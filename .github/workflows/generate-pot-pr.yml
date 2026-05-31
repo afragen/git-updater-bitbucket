@@ -6,6 +6,7 @@ on:
     branches:
       - main
       - master
+      - develop
 
 jobs:
   generate-pot:
@@ -17,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out source code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Set up PHP environment
         uses: shivammathur/setup-php@v2

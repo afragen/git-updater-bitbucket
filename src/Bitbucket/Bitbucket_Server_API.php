@@ -60,7 +60,7 @@ class Bitbucket_Server_API extends Bitbucket_API {
 	/**
 	 * Read the repository meta from API
 	 *
-	 * @return bool
+	 * @return bool|null
 	 */
 	public function get_repo_meta() {
 		return $this->get_remote_api_repo_meta( 'bbserver', '/1.0/projects/:owner/repos/:repo' );
@@ -71,7 +71,7 @@ class Bitbucket_Server_API extends Bitbucket_API {
 	 *
 	 * @access public
 	 *
-	 * @return bool
+	 * @return bool|null
 	 */
 	public function get_remote_tag() {
 		return $this->get_remote_api_tag( 'bbserver', '/1.0/projects/:owner/repos/:repo/tags' );
@@ -80,7 +80,7 @@ class Bitbucket_Server_API extends Bitbucket_API {
 	/**
 	 * Read and parse remote readme.txt.
 	 *
-	 * @return bool
+	 * @return bool|null
 	 */
 	public function get_remote_readme() {
 		return $this->get_remote_api_readme( 'bbserver', '/1.0/projects/:owner/repos/:repo/raw/:readme' );
@@ -91,7 +91,7 @@ class Bitbucket_Server_API extends Bitbucket_API {
 	 *
 	 * @param string $changes Changelog filename - (deprecated).
 	 *
-	 * @return bool
+	 * @return bool|null
 	 */
 	public function get_remote_changes( $changes ) {
 		return $this->get_remote_api_changes( 'bbserver', $changes, '/1.0/projects/:owner/repos/:repo/raw/:changelog' );
@@ -100,7 +100,7 @@ class Bitbucket_Server_API extends Bitbucket_API {
 	/**
 	 * Create array of branches and download links as array.
 	 *
-	 * @return bool
+	 * @return bool|null
 	 */
 	public function get_remote_branches() {
 		return $this->get_remote_api_branches( 'bbserver', '/1.0/projects/:owner/repos/:repo/branches' );
@@ -337,23 +337,22 @@ class Bitbucket_Server_API extends Bitbucket_API {
 	 * Parse tags and create download links.
 	 *
 	 * @param stdClass|array $response  Response from API call.
-	 * @param string         $repo_type plugin|theme.
+	 * @param array          $repo_type plugin|theme.
 	 *
 	 * @return array
 	 */
 	protected function parse_tags( $response, $repo_type ) {
-		$tags = [];
+		$tags          = [];
+		$download_base = "{$repo_type['base_uri']}/projects/{$this->type->owner}/repos/{$this->type->slug}/archive";
+		$download_base = $this->add_endpoints( $this, $download_base );
 
 		foreach ( (array) $response as $tag ) {
-			$download_base = "{$repo_type['base_uri']}/projects/{$this->type->owner}/repos/{$this->type->slug}/archive";
-			$download_base = $this->add_endpoints( $this, $download_base );
-
 			// Ignore leading 'v' and skip anything with dash or words.
 			if ( ! preg_match( '/[^v]+[-a-z]+/', $tag ) ) {
 				$tags[ $tag ] = add_query_arg( 'at', $tag, $download_base );
 			}
-			uksort( $tags, fn ( $a, $b ) => version_compare( ltrim( $b, 'v' ), ltrim( $a, 'v' ) ) );
 		}
+		uksort( $tags, fn ( $a, $b ) => version_compare( ltrim( $b, 'v' ), ltrim( $a, 'v' ) ) );
 
 		return $tags;
 	}
@@ -375,7 +374,7 @@ class Bitbucket_Server_API extends Bitbucket_API {
 
 		add_settings_field(
 			'bitbucket_server_username',
-			esc_html__( 'Bitbucket Server Username', 'git-updater-bitbucket' ),
+			esc_html__( 'Atlassian Account Email', 'git-updater-bitbucket' ),
 			[ Singleton::get_instance( 'Settings', $this ), 'token_callback_text' ],
 			'git_updater_bbserver_install_settings',
 			'bitbucket_server_token',
@@ -387,7 +386,7 @@ class Bitbucket_Server_API extends Bitbucket_API {
 
 		add_settings_field(
 			'bitbucket_server_password',
-			esc_html__( 'Bitbucket Server Password', 'git-updater-bitbucket' ),
+			esc_html__( 'Bitbucket Server API Token', 'git-updater-bitbucket' ),
 			[ Singleton::get_instance( 'Settings', $this ), 'token_callback_text' ],
 			'git_updater_bbserver_install_settings',
 			'bitbucket_server_token',
