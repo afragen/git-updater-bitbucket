@@ -458,27 +458,43 @@ class Bitbucket_API extends API implements API_Interface {
 			]
 		);
 
+		$token_args = [
+			'id'          => 'bitbucket_access_token',
+			'token'       => true,
+			'placeholder' => 'username:password',
+			'class'       => ! empty( static::$options['bitbucket_access_token'] ) ? '' : 'hidden',
+		];
+		$oauth_args = [
+			'provider' => 'bitbucket',
+			'class'    => '',
+		];
+
+		if ( class_exists( 'Fragen\Git_Updater\OAuth\OAuth_Connect' ) ) {
+			$oauth = Singleton::get_instance( 'OAuth\OAuth_Connect', $this );
+			if ( $oauth->is_oauth_token( 'bitbucket' ) ) {
+				$token_args['class'] = trim( $token_args['class'] . ' hidden' );
+			}
+			if ( ! empty( static::$options['bitbucket_access_token'] ) && ! $oauth->is_oauth_token( 'bitbucket' ) ) {
+				$oauth_args['class'] = trim( $oauth_args['class'] . ' hidden' );
+			}
+
+			add_settings_field(
+				'bitbucket_oauth_connect',
+				esc_html__( 'Bitbucket OAuth', 'git-updater-bitbucket' ),
+				[ $oauth, 'render_connect_field' ],
+				'git_updater_bitbucket_install_settings',
+				'bitbucket_token',
+				$oauth_args
+			);
+		}
+
 		add_settings_field(
 			'bitbucket_token',
 			esc_html__( 'Bitbucket Access Token', 'git-updater-bitbucket' ),
 			[ Singleton::get_instance( 'Settings', $this ), 'token_callback_text' ],
 			'git_updater_bitbucket_install_settings',
 			'bitbucket_token',
-			[
-				'id'          => 'bitbucket_access_token',
-				'token'       => true,
-				'placeholder' => 'username:password',
-				'class'       => ! empty( static::$options['bitbucket_access_token'] ) ? '' : 'hidden',
-			]
-		);
-
-		add_settings_field(
-			'bitbucket_oauth_connect',
-			esc_html__( 'Bitbucket OAuth', 'git-updater-bitbucket' ),
-			[ Singleton::get_instance( 'OAuth\OAuth_Connect', $this ), 'render_connect_field' ],
-			'git_updater_bitbucket_install_settings',
-			'bitbucket_token',
-			[ 'provider' => 'bitbucket' ]
+			$token_args
 		);
 
 		/*
