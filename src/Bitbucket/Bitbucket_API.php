@@ -551,6 +551,7 @@ class Bitbucket_API extends API implements API_Interface {
 	 */
 	public function print_section_bitbucket_token() {
 		esc_html_e( 'Click the "Connect Bitbucket" button for an OAuth connection or enter your personal Atlassian account email and API token with MANAGE and READ scopes. It will automatically be converted to a pseudo-token.', 'git-updater-bitbucket' );
+		printf( '<p class="description">%s</p>', esc_html__( 'Access tokens are stored in this site\'s options table. Database backups contain them in cleartext — handle backup files accordingly.', 'git-updater-bitbucket' ) );
 		$icon = plugin_dir_url( dirname( __DIR__ ) ) . 'assets/bitbucket-logo.svg';
 		printf( '<img class="git-oauth-icon" src="%s" alt="Bitbucket logo" />', esc_attr( $icon ) );
 	}
