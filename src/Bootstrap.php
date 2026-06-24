@@ -276,9 +276,13 @@ class Bootstrap {
 	 */
 	public function set_auth_header( $headers, $credentials ) {
 		if ( 'bitbucket' === $credentials['type'] ) {
-			// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
-			$headers['headers']['Authorization'] = 'Basic ' . base64_encode( $credentials['token'] );
-			$headers['headers']['bitbucket']     = $credentials['slug'];
+			if ( str_contains( $credentials['token'], ':' ) ) {
+				// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
+				$headers['headers']['Authorization'] = 'Basic ' . base64_encode( $credentials['token'] );
+			} else {
+				$headers['headers']['Authorization'] = 'Bearer ' . $credentials['token'];
+			}
+			$headers['headers']['bitbucket'] = $credentials['slug'];
 		}
 
 		return $headers;

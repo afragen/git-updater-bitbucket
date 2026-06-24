@@ -428,7 +428,7 @@ class Bitbucket_API extends API implements API_Interface {
 	public function add_settings( $auth_required ) {
 		add_settings_section(
 			'bitbucket_token',
-			esc_html__( 'Bitbucket Pseudo-Token', 'git-updater-bitbucket' ),
+			esc_html__( 'Bitbucket Token', 'git-updater-bitbucket' ),
 			[ $this, 'print_section_bitbucket_token' ],
 			'git_updater_bitbucket_install_settings'
 		);
@@ -458,18 +458,43 @@ class Bitbucket_API extends API implements API_Interface {
 			]
 		);
 
+		$token_args = [
+			'id'          => 'bitbucket_access_token',
+			'token'       => true,
+			'placeholder' => 'username:password',
+			'class'       => ! empty( static::$options['bitbucket_access_token'] ) ? '' : 'hidden',
+		];
+		$oauth_args = [
+			'provider' => 'bitbucket',
+			'class'    => '',
+		];
+
+		if ( class_exists( 'Fragen\Git_Updater\OAuth\OAuth_Connect' ) ) {
+			$oauth = Singleton::get_instance( 'OAuth\OAuth_Connect', $this );
+			if ( $oauth->is_oauth_token( 'bitbucket' ) ) {
+				$token_args['class'] = trim( $token_args['class'] . ' hidden' );
+			}
+			if ( ! empty( static::$options['bitbucket_access_token'] ) && ! $oauth->is_oauth_token( 'bitbucket' ) ) {
+				$oauth_args['class'] = trim( $oauth_args['class'] . ' hidden' );
+			}
+
+			add_settings_field(
+				'bitbucket_oauth_connect',
+				esc_html__( 'Bitbucket OAuth', 'git-updater-bitbucket' ),
+				[ $oauth, 'render_connect_field' ],
+				'git_updater_bitbucket_install_settings',
+				'bitbucket_token',
+				$oauth_args
+			);
+		}
+
 		add_settings_field(
 			'bitbucket_token',
-			esc_html__( 'Bitbucket Pseudo-Token', 'git-updater-bitbucket' ),
+			esc_html__( 'Bitbucket Access Token', 'git-updater-bitbucket' ),
 			[ Singleton::get_instance( 'Settings', $this ), 'token_callback_text' ],
 			'git_updater_bitbucket_install_settings',
 			'bitbucket_token',
-			[
-				'id'          => 'bitbucket_access_token',
-				'token'       => true,
-				'placeholder' => true,
-				'class'       => ! empty( static::$options['bitbucket_access_token'] ) ? '' : 'hidden',
-			]
+			$token_args
 		);
 
 		/*
@@ -497,7 +522,7 @@ class Bitbucket_API extends API implements API_Interface {
 			Singleton::get_instance( 'Settings', $this ),
 			'token_callback_text',
 		];
-		$setting_field['placeholder']     = true;
+		$setting_field['placeholder']     = 'username:password';
 
 		return $setting_field;
 	}
@@ -525,7 +550,8 @@ class Bitbucket_API extends API implements API_Interface {
 	 * Print the Bitbucket user/pass Settings text.
 	 */
 	public function print_section_bitbucket_token() {
-		esc_html_e( 'Enter your personal Atlassian account email and API token with MANAGE and READ scopes. It will automatically be converted to a pseudo-token.', 'git-updater-bitbucket' );
+		esc_html_e( 'Click the "Connect Bitbucket" button for an OAuth connection or enter your personal Atlassian account email and API token with MANAGE and READ scopes. It will automatically be converted to a pseudo-token.', 'git-updater-bitbucket' );
+		printf( '<p class="description">%s</p>', esc_html__( 'Access tokens are stored in this site\'s options table. Database backups contain them in cleartext — handle backup files accordingly.', 'git-updater-bitbucket' ) );
 		$icon = plugin_dir_url( dirname( __DIR__ ) ) . 'assets/bitbucket-logo.svg';
 		printf( '<img class="git-oauth-icon" src="%s" alt="Bitbucket logo" />', esc_attr( $icon ) );
 	}
