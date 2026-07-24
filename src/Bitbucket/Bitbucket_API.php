@@ -346,13 +346,14 @@ class Bitbucket_API extends API implements API_Interface {
 	/**
 	 * Parse remote root files/dirs.
 	 *
-	 * @param stdClass|array $response Response from API call.
+	 * @param stdClass|array<string, mixed> $response Response from API call.
 	 *
-	 * @return array
+	 * @return array{files: list<string>, dirs: list<string>}
 	 */
 	protected function parse_contents_response( $response ) {
 		$files = [];
 		$dirs  = [];
+
 		foreach ( $response->values as $content ) {
 			$content = (object) $content;
 			if ( property_exists( $content, 'type' ) && 'commit_file' === $content->type ) {
@@ -478,6 +479,14 @@ class Bitbucket_API extends API implements API_Interface {
 				$oauth_args['class'] = trim( $oauth_args['class'] . ' hidden' );
 			}
 
+			$remove_args = [
+				'provider' => 'bitbucket',
+				'class'    => '',
+			];
+			if ( empty( static::$options['bitbucket_access_token'] ) || $oauth->is_oauth_token( 'bitbucket' ) ) {
+				$remove_args['class'] = trim( $remove_args['class'] . ' hidden' );
+			}
+
 			add_settings_field(
 				'bitbucket_oauth_connect',
 				esc_html__( 'Bitbucket OAuth', 'git-updater-bitbucket' ),
@@ -485,6 +494,15 @@ class Bitbucket_API extends API implements API_Interface {
 				'git_updater_bitbucket_install_settings',
 				'bitbucket_token',
 				$oauth_args
+			);
+
+			add_settings_field(
+				'bitbucket_remove_token',
+				esc_html__( 'Remove Token', 'git-updater-bitbucket' ),
+				[ $oauth, 'render_remove_token_field' ],
+				'git_updater_bitbucket_install_settings',
+				'bitbucket_token',
+				$remove_args
 			);
 		}
 
