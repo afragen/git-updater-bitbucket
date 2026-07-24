@@ -10,5 +10,4 @@ return array(
     'Fragen\\WP_Readme_Parser\\' => array($vendorDir . '/afragen/wp-readme-parser/src'),
     'Fragen\\Git_Updater\\Bitbucket\\' => array($baseDir . '/src'),
     'Fragen\\Git_Updater\\API\\' => array($baseDir . '/src/Bitbucket'),
-    'Fragen\\Git_Updater\\' => array($vendorDir . '/afragen/git-updater/src/Git_Updater'),
 );
