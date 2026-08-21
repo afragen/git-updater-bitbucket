@@ -146,7 +146,33 @@ class Bitbucket_API extends API implements API_Interface {
 		self::$method       = 'download_link';
 		$download_link_base = $this->get_api_url( '/:owner/:repo/get/', true );
 		$endpoint           = '';
-		$cache              = $this->get_repo_cache( $this->type->slug ?? false, false );
+
+		/*
+		 * Read tag data from the repo cache so non-fetch callers (rollback,
+		 * branch switch, REST update, branch listings) resolve the correct
+		 * endpoint even when $this->type has not been hydrated by a fetch.
+		 */
+		$cache      = $this->get_repo_cache( $this->type->slug ?? false, false, [ 'tags', 'newest_tag', 'release_asset_redirect', 'release_asset_download' ] );
+		$tags       = $this->type->tags ?? [];
+		$newest_tag = $this->type->newest_tag ?? '0.0.0';
+		if ( is_array( $cache ) ) {
+			if ( is_array( $cache['tags'] ?? null ) && ! empty( $cache['tags'] ) ) {
+				$tags = $cache['tags'];
+			}
+			if ( ! empty( $cache['newest_tag'] ) ) {
+				$newest_tag = (string) $cache['newest_tag'];
+			} elseif ( is_array( $cache['tags'] ?? null ) && ! empty( $cache['tags'] ) ) {
+				// Missing newest_tag entry: derive newest from the cached tag list
+				// (a flat list of names; sort_tags() semantics).
+				$sorted = $cache['tags'];
+				usort( $sorted, fn ( $a, $b ) => version_compare( trim( $b, 'v' ), trim( $a, 'v' ) ) );
+				$newest_tag = (string) reset( $sorted );
+			}
+		}
+		// Hydrate stale repo object so use_release_asset()'s '0.0.0' gate sees the real value.
+		if ( '0.0.0' === ( $this->type->newest_tag ?? '0.0.0' ) && '0.0.0' !== $newest_tag ) {
+			$this->type->newest_tag = $newest_tag;
+		}
 
 		$target = false !== $branch_switch ? $branch_switch : $this->type->branch;
 
@@ -178,16 +204,16 @@ class Bitbucket_API extends API implements API_Interface {
 		 * If a branch has been given, use branch.
 		 * If branch is primary branch (default) and tags are used, use newest tag.
 		 */
-		if ( $this->type->primary_branch !== $target || empty( $this->type->tags ) ) {
+		if ( $this->type->primary_branch !== $target || empty( $tags ) ) {
 			if ( ! empty( $this->type->enterprise_api ) ) {
 				$endpoint = add_query_arg( 'at', $target, $endpoint );
 			} else {
 				$endpoint .= $target . '.zip';
 			}
 		} elseif ( ! empty( $this->type->enterprise_api ) ) {
-				$endpoint = add_query_arg( 'at', $this->type->newest_tag, $endpoint );
+				$endpoint = add_query_arg( 'at', $newest_tag, $endpoint );
 		} else {
-			$endpoint .= $this->type->newest_tag . '.zip';
+			$endpoint .= $newest_tag . '.zip';
 		}
 
 		$download_link = $download_link_base . $endpoint;
