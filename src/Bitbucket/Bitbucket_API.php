@@ -169,10 +169,6 @@ class Bitbucket_API extends API implements API_Interface {
 				$newest_tag = (string) reset( $sorted );
 			}
 		}
-		// Hydrate stale repo object so use_release_asset()'s '0.0.0' gate sees the real value.
-		if ( '0.0.0' === ( $this->type->newest_tag ?? '0.0.0' ) && '0.0.0' !== $newest_tag ) {
-			$this->type->newest_tag = $newest_tag;
-		}
 
 		$target = false !== $branch_switch ? $branch_switch : $this->type->branch;
 
@@ -347,6 +343,22 @@ class Bitbucket_API extends API implements API_Interface {
 		if ( $this->validate_response( $response ) ) {
 			return $response;
 		}
+
+		/*
+		 * Seed type->branches before the loop so construct_download_link()
+		 * classifies branches versus tags during the per-branch download link
+		 * resolution. populate_api_data() fills the repo object later; without
+		 * this, every branch target is treated as a tag and release-asset repos
+		 * re-resolve the release asset for each branch.
+		 */
+		$this->type->branches = [];
+		foreach ( $response as $branch ) {
+			if ( ! property_exists( $branch, 'name' ) ) {
+				continue;
+			}
+			$this->type->branches[ $branch->name ] = [];
+		}
+
 		$branches = [];
 		foreach ( $response as $branch ) {
 			if ( ! property_exists( $branch, 'name' ) ) {
