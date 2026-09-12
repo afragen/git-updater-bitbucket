@@ -137,4 +137,33 @@ class BootstrapTest extends WP_UnitTestCase {
 
 		$this->assertEqualSetsWithIndex($expected, $actual);
 	}
+
+
+	/**
+	 * Public hosts come from the active add-on; enterprise hosts from repos.
+	 */
+	public function test_set_credential_hosts_adds_public_hosts() {
+		$hosts = (new Bootstrap())->set_credential_hosts([], [], []);
+
+		$this->assertContains('bitbucket.org', $hosts['bitbucket']);
+		$this->assertContains('api.bitbucket.org', $hosts['bitbucket']);
+	}
+
+	public function test_set_credential_hosts_adds_enterprise_host_from_registered_repo() {
+		$repo             = new \stdClass();
+		$repo->git        = 'bitbucket';
+		$repo->enterprise = 'https://bitbucket.example.com';
+
+		$hosts = (new Bootstrap())->set_credential_hosts([], [], [$repo]);
+
+		$this->assertContains('bitbucket.example.com', $hosts['bitbucket']);
+	}
+
+	public function test_load_hooks_registers_credential_hosts_filter() {
+		$bootstrap = new Bootstrap();
+		$bootstrap->load_hooks();
+
+		$this->assertNotFalse(has_filter('gu_credential_hosts', [$bootstrap, 'set_credential_hosts']));
+	}
+
 }
