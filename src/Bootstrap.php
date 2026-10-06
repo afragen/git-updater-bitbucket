@@ -276,6 +276,7 @@ class Bootstrap {
 	 * @return array
 	 */
 	public function set_auth_header( $headers, $credentials ) {
+		$credentials['token'] = $credentials['token'] ?? '';
 		if ( 'bitbucket' === $credentials['type'] ) {
 			if ( str_contains( $credentials['token'], ':' ) ) {
 				// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
