@@ -146,7 +146,29 @@ class Bitbucket_API extends API implements API_Interface {
 		self::$method       = 'download_link';
 		$download_link_base = $this->get_api_url( '/:owner/:repo/get/', true );
 		$endpoint           = '';
-		$cache              = $this->get_repo_cache( $this->type->slug ?? false, false );
+
+		/*
+		 * Read tag data from the repo cache so non-fetch callers (rollback,
+		 * branch switch, REST update, branch listings) resolve the correct
+		 * endpoint even when $this->type has not been hydrated by a fetch.
+		 */
+		$cache      = $this->get_repo_cache( $this->type->slug ?? false, false, [ 'tags', 'newest_tag', 'release_asset_redirect', 'release_asset_download' ] ) ?: [];
+		$tags       = $this->type->tags ?? [];
+		$newest_tag = $this->type->newest_tag ?? '0.0.0';
+		if ( is_array( $cache['tags'] ?? null ) && ! empty( $cache['tags'] ) ) {
+			$tags = $cache['tags'];
+		}
+		if ( ! empty( $cache['newest_tag'] ) ) {
+			$newest_tag = (string) $cache['newest_tag'];
+		} elseif ( is_array( $cache['tags'] ?? null ) && ! empty( $cache['tags'] ) ) {
+			// Missing newest_tag entry: derive newest from the cached tag list
+			// (a flat list of names; sort_tags() semantics).
+			$sorted = $cache['tags'];
+			usort( $sorted, fn ( $a, $b ) => version_compare( trim( $b, 'v' ), trim( $a, 'v' ) ) );
+			$newest_tag = (string) reset( $sorted );
+		}
+
+		$target = false !== $branch_switch ? $branch_switch : $this->type->branch;
 
 		// Release asset.
 		// Bitbucket seems to require the release asset redirect for updating
@@ -176,27 +198,16 @@ class Bitbucket_API extends API implements API_Interface {
 		 * If a branch has been given, use branch.
 		 * If branch is primary branch (default) and tags are used, use newest tag.
 		 */
-		if ( $this->type->primary_branch !== $this->type->branch || empty( $this->type->tags ) ) {
+		if ( $this->type->primary_branch !== $target || empty( $tags ) ) {
 			if ( ! empty( $this->type->enterprise_api ) ) {
-				$endpoint = add_query_arg( 'at', $this->type->branch, $endpoint );
+				$endpoint = add_query_arg( 'at', $target, $endpoint );
 			} else {
-				$endpoint .= $this->type->branch . '.zip';
+				$endpoint .= $target . '.zip';
 			}
 		} elseif ( ! empty( $this->type->enterprise_api ) ) {
-				$endpoint = add_query_arg( 'at', $this->type->newest_tag, $endpoint );
+				$endpoint = add_query_arg( 'at', $newest_tag, $endpoint );
 		} else {
-			$endpoint .= $this->type->newest_tag . '.zip';
-		}
-
-		/*
-		 * Create endpoint for branch switching.
-		 */
-		if ( $branch_switch ) {
-			if ( ! empty( $this->type->enterprise_api ) ) {
-				$endpoint = add_query_arg( 'at', $branch_switch, $endpoint );
-			} else {
-				$endpoint = $branch_switch . '.zip';
-			}
+			$endpoint .= $newest_tag . '.zip';
 		}
 
 		$download_link = $download_link_base . $endpoint;
@@ -330,6 +341,22 @@ class Bitbucket_API extends API implements API_Interface {
 		if ( $this->validate_response( $response ) ) {
 			return $response;
 		}
+
+		/*
+		 * Seed type->branches before the loop so construct_download_link()
+		 * classifies branches versus tags during the per-branch download link
+		 * resolution. populate_api_data() fills the repo object later; without
+		 * this, every branch target is treated as a tag and release-asset repos
+		 * re-resolve the release asset for each branch.
+		 */
+		$this->type->branches = [];
+		foreach ( $response as $branch ) {
+			if ( ! property_exists( $branch, 'name' ) ) {
+				continue;
+			}
+			$this->type->branches[ $branch->name ] = [];
+		}
+
 		$branches = [];
 		foreach ( $response as $branch ) {
 			if ( ! property_exists( $branch, 'name' ) ) {

@@ -61,6 +61,7 @@ class Bootstrap {
 		add_filter( 'gu_git_servers', [ $this, 'set_git_servers' ], 10, 1 );
 		add_filter( 'gu_running_git_servers', [ $this, 'set_running_enterprise_servers' ], 10, 2 );
 		add_filter( 'gu_installed_apis', [ $this, 'set_installed_apis' ], 10, 1 );
+		add_filter( 'gu_credential_hosts', [ $this, 'set_credential_hosts' ], 10, 3 );
 		add_filter( 'gu_post_api_response_body', [ $this, 'convert_remote_body_response' ], 10, 2 );
 		add_filter( 'gu_parse_api_branches', [ $this, 'parse_branches' ], 10, 2 );
 		add_filter( 'gu_parse_release_asset', [ $this, 'parse_release_asset' ], 10, 4 );
@@ -275,6 +276,7 @@ class Bootstrap {
 	 * @return array
 	 */
 	public function set_auth_header( $headers, $credentials ) {
+		$credentials['token'] = $credentials['token'] ?? '';
 		if ( 'bitbucket' === $credentials['type'] ) {
 			if ( str_contains( $credentials['token'], ':' ) ) {
 				// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
@@ -355,6 +357,33 @@ class Bootstrap {
 				'bitbucket_server_api' => true,
 			]
 		);
+	}
+
+	/**
+	 * Add hosts authorized to receive Bitbucket credentials.
+	 *
+	 * @param array<string, array<int, string>> $hosts          Provider => hostnames.
+	 * @param array<string, bool|string>        $installed_apis Active API add-ons.
+	 * @param array<string, stdClass>           $repos          Configured repositories.
+	 *
+	 * @return array<string, array<int, string>>
+	 */
+	public function set_credential_hosts( $hosts, $installed_apis, $repos ) {
+		$hosts['bitbucket'] = array_merge( $hosts['bitbucket'] ?? [], [ 'bitbucket.org', 'api.bitbucket.org' ] );
+
+		foreach ( $repos as $repo ) {
+			if ( ! isset( $repo->git ) || 'bitbucket' !== $repo->git ) {
+				continue;
+			}
+			foreach ( [ $repo->enterprise ?? '', $repo->enterprise_api ?? '', $repo->base_uri ?? '' ] as $candidate ) {
+				$host = wp_parse_url( (string) $candidate, PHP_URL_HOST );
+				if ( ! empty( $host ) ) {
+					$hosts['bitbucket'][] = (string) $host;
+				}
+			}
+		}
+
+		return $hosts;
 	}
 
 	/**
@@ -440,6 +469,18 @@ class Bootstrap {
 		if ( 'bitbucket' === $install['git_updater_api'] ) {
 			$install = ( new Bitbucket_API() )->remote_install( $headers, $install );
 			$install = ( new Bitbucket_Server_API() )->remote_install( $headers, $install );
+
+			$api = \Fragen\Singleton::get_instance( 'Fragen\Git_Updater\API\API', $this );
+			if ( ! $api->is_allowed_credential_host( (string) ( $install['download_link'] ?? '' ), 'bitbucket' ) ) {
+				$install['error'] = new WP_Error(
+					'gu_install_host_not_allowed',
+					sprintf(
+						/* translators: %s: hostname of the install source. */
+						esc_html__( 'The install source %s is not an allowed host.', 'git-updater-bitbucket' ),
+						(string) wp_parse_url( (string) ( $install['download_link'] ?? '' ), PHP_URL_HOST )
+					)
+				);
+			}
 		}
 
 		return $install;

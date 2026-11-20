@@ -129,18 +129,36 @@ class Bitbucket_Server_API extends Bitbucket_API {
 		$endpoint           = $this->add_endpoints( $this, '' );
 
 		/*
+		 * Read tag data from the repo cache so non-fetch callers (rollback,
+		 * branch switch, REST update, branch listings) resolve the correct
+		 * endpoint even when $this->type has not been hydrated by a fetch.
+		 */
+		$cache      = $this->get_repo_cache( $this->type->slug ?? false, false, [ 'tags', 'newest_tag' ] ) ?: [];
+		$tags       = $this->type->tags ?? [];
+		$newest_tag = $this->type->newest_tag ?? '0.0.0';
+		if ( is_array( $cache['tags'] ?? null ) && ! empty( $cache['tags'] ) ) {
+			$tags = $cache['tags'];
+		}
+		if ( ! empty( $cache['newest_tag'] ) ) {
+			$newest_tag = (string) $cache['newest_tag'];
+		} elseif ( is_array( $cache['tags'] ?? null ) && ! empty( $cache['tags'] ) ) {
+			// Missing newest_tag entry: derive newest from the cached tag list
+			// (a flat list of names; sort_tags() semantics).
+			$sorted = $cache['tags'];
+			usort( $sorted, fn ( $a, $b ) => version_compare( trim( $b, 'v' ), trim( $a, 'v' ) ) );
+			$newest_tag = (string) reset( $sorted );
+		}
+
+		$target = false !== $branch_switch ? $branch_switch : $this->type->branch;
+
+		/*
 		 * If a branch has been given, use branch.
 		 * If branch is primary branch (default) and tags are used, use newest tag.
 		 */
-		if ( $this->type->primary_branch !== $this->type->branch || empty( $this->type->tags ) ) {
-			$endpoint = add_query_arg( 'at', $this->type->branch, $endpoint );
+		if ( $this->type->primary_branch !== $target || empty( $tags ) ) {
+			$endpoint = add_query_arg( 'at', $target, $endpoint );
 		} else {
-			$endpoint = add_query_arg( 'at', $this->type->newest_tag, $endpoint );
-		}
-
-		// Create branch switch endpoint.
-		if ( $branch_switch ) {
-			$endpoint = urldecode( add_query_arg( 'at', $branch_switch, $endpoint ) );
+			$endpoint = add_query_arg( 'at', $newest_tag, $endpoint );
 		}
 
 		$download_link = $download_link_base . $endpoint;
@@ -291,6 +309,22 @@ class Bitbucket_Server_API extends Bitbucket_API {
 		if ( $this->validate_response( $response ) ) {
 			return $response;
 		}
+
+		/*
+		 * Seed type->branches before the loop so construct_download_link()
+		 * classifies branches versus tags during the per-branch download link
+		 * resolution. populate_api_data() fills the repo object later; without
+		 * this, every branch target is treated as a tag and release-asset repos
+		 * re-resolve the release asset for each branch.
+		 */
+		$this->type->branches = [];
+		foreach ( $response as $branch ) {
+			if ( ! property_exists( $branch, 'displayId' ) ) {
+				continue;
+			}
+			$this->type->branches[ $branch->displayId ] = [];
+		}
+
 		$branches = [];
 		foreach ( $response as $branch ) {
 			if ( ! property_exists( $branch, 'displayId' ) ) {
