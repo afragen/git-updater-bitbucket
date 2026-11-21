@@ -96,7 +96,8 @@ class Bootstrap {
 	 * @return string
 	 */
 	public function parse_headers( $header, $git ) {
-		if ( 'Bitbucket' === $git && false === strpos( $header['host'], 'bitbucket.org' ) ) {
+		$host = (string) ( $header['host'] ?? '' );
+		if ( 'Bitbucket' === $git && false === strpos( $host, 'bitbucket.org' ) ) {
 			$header['enterprise_uri']  = $header['base_uri'];
 			$header['enterprise_api']  = trim( $header['enterprise_uri'], '/' );
 			$header['enterprise_api'] .= '/rest/api';

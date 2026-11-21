@@ -1,4 +1,6 @@
 [unreleased]
+* fix PHP 8.5 deprecations — cast `$header['host']` and the remote-install options key to string so a null value no longer triggers the null-offset deprecation
+* ci: add PHP 8.6 to the test matrix and a PHP 8.5/8.6 deprecation check (`bin/check-php-deprecations.sh`)
 
 #### 2.9.0 / 2026-11-20
 * read `tags` and `newest_tag` from the repo cache in `construct_download_link()` so non-fetch callers resolve the correct download endpoint even when the repo object has not been hydrated by a fetch (requires Git Updater 14.4+)

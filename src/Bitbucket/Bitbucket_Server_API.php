@@ -520,14 +520,14 @@ class Bitbucket_Server_API extends Bitbucket_API {
 			);
 
 			if ( ! empty( $install['bitbucket_username'] ) && ! empty( $install['bitbucket_password'] ) ) {
-				$install['options'][ $install['repo'] ] = "{$install['bitbucket_username']}:{$install['bitbucket_password']}";
+				$install['options'][ (string) $install['repo'] ] = "{$install['bitbucket_username']}:{$install['bitbucket_password']}";
 			}
 
 			/*
 			* Add/Save access token if present.
 			*/
 			if ( ! empty( $install['bitbucket_access_token'] ) ) {
-				$install['options'][ $install['repo'] ] = $install['bitbucket_access_token'];
+				$install['options'][ (string) $install['repo'] ] = $install['bitbucket_access_token'];
 			}
 		}
 
